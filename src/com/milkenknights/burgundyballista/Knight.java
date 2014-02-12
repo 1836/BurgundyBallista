@@ -18,12 +18,16 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class Knight extends IterativeRobot {
+	JStick xbox;
+	DriveSubsystem driveSubsystem;
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-
+		xbox = new JStick(1);
+		driveSubsystem = new DriveSubsystem(xbox, 1, 2);
     }
 
     /**
@@ -37,7 +41,9 @@ public class Knight extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        
+		xbox.update();
+		
+        driveSubsystem.update();
     }
     
     /**
