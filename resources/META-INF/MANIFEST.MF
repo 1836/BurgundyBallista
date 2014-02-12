@@ -1,6 +1,6 @@
 MIDlet-Name: BurgundyBallista
 MIDlet-Version: 1.0.0
 MIDlet-Vendor: FIRST
-MIDlet-1: Knight, , con.milkenknights.burgundyballista.Knight
+MIDlet-1: Knight, ,  com.milkenknights.burgundyballista.Knight
 MicroEdition-Profile: IMP-1.0
 MicroEdition-Configuration: CLDC-1.1

@@ -1,4 +1,4 @@
-package con.milkenknights.burgundyballista;
+package com.milkenknights.burgundyballista;
 
 import edu.wpi.first.wpilibj.Joystick;
 
