@@ -22,11 +22,12 @@ public class DriveSubsystem {
 	public void update() {
 		double leftAxisY = joystick.getAxis(JStick.XBOX_LSY);
 		double rightAxisX = joystick.getAxis(JStick.XBOX_RSX);
+		boolean trigDown = Math.abs(joystick.getAxis(JStick.XBOX_TRIG)) > 0.5;
 		
 		double drivePower = leftAxisY;
 		double driveTurn = rightAxisX;
 		
-        drive.cheesyDrive(drivePower, driveTurn, false);
+        drive.cheesyDrive(drivePower, driveTurn, trigDown);
 		
 	}
 }
