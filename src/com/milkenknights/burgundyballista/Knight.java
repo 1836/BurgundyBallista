@@ -20,13 +20,15 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 public class Knight extends IterativeRobot {
 	JStick xbox;
 	DriveSubsystem driveSubsystem;
+	CasterSubsystem casterSubsystem;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-		driveSubsystem = new DriveSubsystem(1, 2);
+		driveSubsystem = new DriveSubsystem(1, 2, 1 ,2);
+		casterSubsystem = new CasterSubsystem(1, 2);
     }
 
     /**
@@ -43,6 +45,7 @@ public class Knight extends IterativeRobot {
 		JStickMultiton.updateAll();
 		
         driveSubsystem.update();
+		casterSubsystem.update();
     }
     
     /**

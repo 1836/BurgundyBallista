@@ -17,10 +17,10 @@ public class DriveSubsystem {
 	boolean normalDriveGear;
 	boolean slowMode;
 	
-	public DriveSubsystem(int leftWheel, int rightWheel) {
+	public DriveSubsystem(int leftWheel, int rightWheel, int a, int b) {
 		xbox = JStickMultiton.getJStick(1);
 		drive = new Drive(leftWheel, rightWheel);
-		driveGear = new SolenoidPair(1, 2, true, false, true);
+		driveGear = new SolenoidPair(a, b, true, false, true);
 	}
 	
 	public void update() {
