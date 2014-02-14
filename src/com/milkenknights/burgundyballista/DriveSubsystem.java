@@ -11,18 +11,18 @@ package com.milkenknights.burgundyballista;
  * @author Jake
  */
 public class DriveSubsystem {
-	JStick joystick;
+	JStick xbox;
 	Drive drive;
 	
-	public DriveSubsystem(JStick xbox, int leftWheel, int rightWheel) {
-		joystick = xbox;
+	public DriveSubsystem(int leftWheel, int rightWheel) {
+		xbox = JStickMultiton.getJStick(1);
 		drive = new Drive(leftWheel, rightWheel);
 	}
 	
 	public void update() {
-		double leftAxisY = joystick.getAxis(JStick.XBOX_LSY);
-		double rightAxisX = joystick.getAxis(JStick.XBOX_RSX);
-		boolean trigDown = Math.abs(joystick.getAxis(JStick.XBOX_TRIG)) > 0.5;
+		double leftAxisY = xbox.getAxis(JStick.XBOX_LSY);
+		double rightAxisX = xbox.getAxis(JStick.XBOX_RSX);
+		boolean trigDown = Math.abs(xbox.getAxis(JStick.XBOX_TRIG)) > 0.5;
 		
 		double drivePower = leftAxisY;
 		double driveTurn = rightAxisX;

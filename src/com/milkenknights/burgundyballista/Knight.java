@@ -26,8 +26,7 @@ public class Knight extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-		xbox = new JStick(1);
-		driveSubsystem = new DriveSubsystem(xbox, 1, 2);
+		driveSubsystem = new DriveSubsystem(1, 2);
     }
 
     /**
@@ -41,7 +40,7 @@ public class Knight extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-		xbox.update();
+		JStickMultiton.updateAll();
 		
         driveSubsystem.update();
     }
