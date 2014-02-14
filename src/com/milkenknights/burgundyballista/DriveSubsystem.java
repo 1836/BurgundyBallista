@@ -13,21 +13,41 @@ package com.milkenknights.burgundyballista;
 public class DriveSubsystem {
 	JStick joystick;
 	Drive drive;
+	SolenoidPair driveGear;
+	boolean normalDriveGear;
+	boolean slowMode;
 	
 	public DriveSubsystem(JStick xbox, int leftWheel, int rightWheel) {
 		joystick = xbox;
 		drive = new Drive(leftWheel, rightWheel);
+		driveGear = new SolenoidPair(1, 2, true, false, true);
 	}
 	
 	public void update() {
-		double leftAxisY = joystick.getAxis(JStick.XBOX_LSY);
-		double rightAxisX = joystick.getAxis(JStick.XBOX_RSX);
+		if (joystick.isReleased(JStick.XBOX_LB)) {
+			driveGear.toggle();
+			normalDriveGear = driveGear.get();
+		}
+		
+		if (joystick.isReleased(JStick.XBOX_Y)) {
+			slowMode =! slowMode;
+			
+			if (slowMode) {
+				driveGear.set(false);
+			}
+			else {
+				driveGear.set(normalDriveGear);
+			}
+		}
+		
+		double power = joystick.getAxis(JStick.XBOX_LSY);
+		double turn = joystick.getAxis(JStick.XBOX_RSX);
 		boolean trigDown = Math.abs(joystick.getAxis(JStick.XBOX_TRIG)) > 0.5;
+
+		if (slowMode) {
+			power = power * .5;
+		}
 		
-		double drivePower = leftAxisY;
-		double driveTurn = rightAxisX;
-		
-        drive.cheesyDrive(drivePower, driveTurn, trigDown);
-		
+        drive.cheesyDrive(power, turn, trigDown);
 	}
 }
