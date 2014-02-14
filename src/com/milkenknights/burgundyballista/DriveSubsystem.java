@@ -11,14 +11,14 @@ package com.milkenknights.burgundyballista;
  * @author Jake
  */
 public class DriveSubsystem {
-	JStick joystick;
+	JStick xbox;
 	Drive drive;
 	SolenoidPair driveGear;
 	boolean normalDriveGear;
 	boolean slowMode;
 	
-	public DriveSubsystem(JStick xbox, int leftWheel, int rightWheel) {
-		joystick = xbox;
+	public DriveSubsystem(int leftWheel, int rightWheel) {
+		xbox = JStickMultiton.getJStick(1);
 		drive = new Drive(leftWheel, rightWheel);
 		driveGear = new SolenoidPair(1, 2, true, false, true);
 	}
