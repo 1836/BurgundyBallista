@@ -10,6 +10,8 @@ package com.milkenknights.burgundyballista;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,6 +22,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class Knight extends IterativeRobot {
 	ConfigFile config;
+	
+	Vector subsystems;
 	
 	Compressor compressor;
 	DriveSubsystem driveSubsystem;
@@ -35,8 +39,15 @@ public class Knight extends IterativeRobot {
 		
 		compressor = new Compressor(config.getAsInt("compressorPressureSwitch"),
 				config.getAsInt("compressorRelayChannel"));
-		driveSubsystem = new DriveSubsystem(config);
-		casterSubsystem = new CasterSubsystem(config);
+		
+		subsystems = new Vector(10);
+		
+		subsystems.addElement(new DriveSubsystem(config));
+		subsystems.addElement(new CasterSubsystem(config));
+		
+		// since no more subsystems will be added, we can free the remaining
+		// memory
+		subsystems.trimToSize();
 		
 		compressor.start();
     }
@@ -52,10 +63,9 @@ public class Knight extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-		JStickMultiton.updateAll();
-		
-        driveSubsystem.update();
-		casterSubsystem.update();
+		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
+			((Subsystem) e.nextElement()).teleopPeriodic();
+		}
     }
     
     /**
