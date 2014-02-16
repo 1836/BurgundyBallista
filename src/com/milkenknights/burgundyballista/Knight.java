@@ -19,9 +19,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class Knight extends IterativeRobot {
-	JStick xbox;
-	
 	ConfigFile config;
+	
 	Compressor compressor;
 	DriveSubsystem driveSubsystem;
 	CasterSubsystem casterSubsystem;
