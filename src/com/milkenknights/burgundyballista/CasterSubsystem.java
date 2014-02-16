@@ -10,16 +10,17 @@ package com.milkenknights.burgundyballista;
  *
  * @author Jake
  */
-public class CasterSubsystem {
+public class CasterSubsystem extends Subsystem {
 	JStick xbox;
 	SolenoidPair caster;
+	
 	public CasterSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
 		caster = new SolenoidPair(config.getAsInt("sCasterA"),
 				config.getAsInt("sCasterB"), true, true, false);
 	}
 	
-	public void update() {
+	public void teleopPeriodic() {
 		if (xbox.isReleased(JStick.XBOX_RB)) {
 			caster.toggle();
 		}

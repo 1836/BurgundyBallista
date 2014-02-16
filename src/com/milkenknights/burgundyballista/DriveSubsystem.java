@@ -10,7 +10,7 @@ package com.milkenknights.burgundyballista;
  *
  * @author Jake
  */
-public class DriveSubsystem {
+public class DriveSubsystem extends Subsystem {
 	JStick xbox;
 	Drive drive;
 	SolenoidPair driveGear;
@@ -24,7 +24,7 @@ public class DriveSubsystem {
 				config.getAsInt("sDriveGearB"), true, false, true);
 	}
 	
-	public void update() {
+	public void teleopPeriodic() {
 		if (xbox.isReleased(JStick.XBOX_LB)) {
 			driveGear.toggle();
 			normalDriveGear = driveGear.get();
