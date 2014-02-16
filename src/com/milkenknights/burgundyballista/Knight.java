@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class Knight extends IterativeRobot {
 	JStick xbox;
+	
+	ConfigFile config;
 	Compressor compressor;
 	DriveSubsystem driveSubsystem;
 	CasterSubsystem casterSubsystem;
@@ -29,9 +31,13 @@ public class Knight extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-		compressor = new Compressor(1,2);
-		driveSubsystem = new DriveSubsystem(1, 2, 1 ,2);
-		casterSubsystem = new CasterSubsystem(1, 2);
+		config = new ConfigFile("robot-config.txt");
+		config.loadFile();
+		
+		compressor = new Compressor(config.getAsInt("compressorPressureSwitch"),
+				config.getAsInt("compressorRelayChannel"));
+		driveSubsystem = new DriveSubsystem(config);
+		casterSubsystem = new CasterSubsystem(config);
 		
 		compressor.start();
     }

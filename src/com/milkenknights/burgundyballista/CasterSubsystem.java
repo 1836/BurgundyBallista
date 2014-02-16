@@ -13,9 +13,10 @@ package com.milkenknights.burgundyballista;
 public class CasterSubsystem {
 	JStick xbox;
 	SolenoidPair caster;
-	public CasterSubsystem(int a, int b) {
+	public CasterSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
-		caster = new SolenoidPair(a, b, true, true, false);
+		caster = new SolenoidPair(config.getAsInt("sCasterA"),
+				config.getAsInt("sCasterB"), true, true, false);
 	}
 	
 	public void update() {

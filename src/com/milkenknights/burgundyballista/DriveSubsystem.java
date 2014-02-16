@@ -16,11 +16,12 @@ public class DriveSubsystem {
 	SolenoidPair driveGear;
 	boolean normalDriveGear;
 	boolean slowMode;
-	
-	public DriveSubsystem(int leftWheel, int rightWheel, int a, int b) {
+	public DriveSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
-		drive = new Drive(leftWheel, rightWheel);
-		driveGear = new SolenoidPair(a, b, true, false, true);
+		drive = new Drive(config.getAsInt("tLeftWheel"),
+				config.getAsInt("tRightWheel"));
+		driveGear = new SolenoidPair(config.getAsInt("sDriveGearA"),
+				config.getAsInt("sDriveGearB"), true, false, true);
 	}
 	
 	public void update() {
@@ -34,8 +35,7 @@ public class DriveSubsystem {
 			
 			if (slowMode) {
 				driveGear.set(false);
-			}
-			else {
+			} else {
 				driveGear.set(normalDriveGear);
 			}
 		}
