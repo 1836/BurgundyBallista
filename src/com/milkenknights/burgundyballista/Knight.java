@@ -8,6 +8,7 @@
 package com.milkenknights.burgundyballista;
 
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -19,16 +20,20 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class Knight extends IterativeRobot {
 	JStick xbox;
+	Compressor compressor;
 	DriveSubsystem driveSubsystem;
 	CasterSubsystem casterSubsystem;
-
+	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+		compressor = new Compressor(1,2);
 		driveSubsystem = new DriveSubsystem(1, 2, 1 ,2);
 		casterSubsystem = new CasterSubsystem(1, 2);
+		
+		compressor.start();
     }
 
     /**
