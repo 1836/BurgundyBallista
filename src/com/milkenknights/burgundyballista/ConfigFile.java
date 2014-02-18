@@ -52,7 +52,7 @@ public class ConfigFile extends RobotConfig {
 	}
 
 	public String customGet(Object k) {
-		return configMap.get(k).toString();
+		return configMap.get(k);
 	}
 
 }

@@ -35,7 +35,7 @@ public class RobotConfig {
 	}
 
 	final public String get(Object k) {
-		String v = customGet(k);
+		Object v = customGet(k);
 		
 		return (v != null ? v : defaultConfig.get(k)).toString();
 	}
