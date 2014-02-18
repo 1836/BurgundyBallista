@@ -6,6 +6,8 @@
 
 package com.milkenknights.burgundyballista;
 
+import edu.wpi.first.wpilibj.Talon;
+
 /**
  *
  * @author Jake
@@ -18,8 +20,8 @@ public class DriveSubsystem extends Subsystem {
 	boolean slowMode;
 	public DriveSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
-		drive = new Drive(config.getAsInt("tLeftWheel"),
-				config.getAsInt("tRightWheel"));
+		drive = new Drive(new Talon(config.getAsInt("tLeftWheel")),
+				new Talon(config.getAsInt("tRightWheel")));
 		// this solenoid pair is TRUE if the robot is in high gear
 		driveGear = new SolenoidPair(config.getAsInt("sDriveGearHigh"),
 				config.getAsInt("sDriveGearLow"), true, false, true);
