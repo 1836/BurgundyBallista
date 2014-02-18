@@ -1,5 +1,7 @@
 package com.milkenknights.burgundyballista;
 
+import edu.wpi.first.wpilibj.Solenoid;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,17 +14,16 @@ package com.milkenknights.burgundyballista;
  */
 public class CasterSubsystem extends Subsystem {
 	JStick xbox;
-	SolenoidPair caster;
+	Solenoid caster;
 	
 	public CasterSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
-		caster = new SolenoidPair(config.getAsInt("sCasterA"),
-				config.getAsInt("sCasterB"), true, true, false);
+		caster = new Solenoid(config.getAsInt("sCaster");
 	}
 	
 	public void teleopPeriodic() {
 		if (xbox.isReleased(JStick.XBOX_RB)) {
-			caster.toggle();
+			caster.set(!caster.get());
 		}
 	}
 }

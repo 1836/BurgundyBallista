@@ -20,8 +20,9 @@ public class DriveSubsystem extends Subsystem {
 		xbox = JStickMultiton.getJStick(1);
 		drive = new Drive(config.getAsInt("tLeftWheel"),
 				config.getAsInt("tRightWheel"));
-		driveGear = new SolenoidPair(config.getAsInt("sDriveGearA"),
-				config.getAsInt("sDriveGearB"), true, false, true);
+		// this solenoid pair is TRUE if the robot is in high gear
+		driveGear = new SolenoidPair(config.getAsInt("sDriveGearHigh"),
+				config.getAsInt("sDriveGearLow"), true, false, true);
 	}
 	
 	public void teleopPeriodic() {
