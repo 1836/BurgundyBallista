@@ -18,7 +18,7 @@ public class CasterSubsystem extends Subsystem {
 	
 	public CasterSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
-		caster = new Solenoid(config.getAsInt("sCaster");
+		caster = new Solenoid(config.getAsInt("sCaster"));
 	}
 	
 	public void teleopPeriodic() {

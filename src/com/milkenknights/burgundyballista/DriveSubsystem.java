@@ -41,6 +41,8 @@ public class DriveSubsystem extends Subsystem {
 			}
 		}
 		
+		xbox.update();
+		
 		double power = xbox.getAxis(JStick.XBOX_LSY);
 		double turn = xbox.getAxis(JStick.XBOX_RSX);
 		boolean trigDown = Math.abs(xbox.getAxis(JStick.XBOX_TRIG)) > 0.5;
