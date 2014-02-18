@@ -49,7 +49,7 @@ public class RobotConfig {
 	}
 	
 	// This method should be overridden by an extending class
-	public String customGet(Object k) {
+	protected Object customGet(Object k) {
 		return null;
 	}
 }

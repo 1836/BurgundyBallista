@@ -51,7 +51,7 @@ public class ConfigFile extends RobotConfig {
 		}
 	}
 
-	public String customGet(Object k) {
+	protected Object customGet(Object k) {
 		return configMap.get(k);
 	}
 
