@@ -63,6 +63,8 @@ public class Knight extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+		JStickMultiton.updateAll();
+
 		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
 			((Subsystem) e.nextElement()).teleopPeriodic();
 		}
