@@ -10,6 +10,7 @@ package com.milkenknights.burgundyballista;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Watchdog;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -68,6 +69,9 @@ public class Knight extends IterativeRobot {
 		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
 			((Subsystem) e.nextElement()).teleopPeriodic();
 		}
+                
+                // Feed the Watchdog. Makes the motors not fail every 100ms
+                Watchdog.getInstance().feed();
     }
     
     /**
