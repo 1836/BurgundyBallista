@@ -13,10 +13,10 @@ public class IntakeSubsystem {
 
 	
 	public IntakeSubsystem(RobotConfig config) {
-            tIntake = new Talon(config.getAsInt("tIntake"));
-            sIntake = new SolenoidPair(config.getAsInt("sIntakeA"), 
+                tIntake = new Talon(config.getAsInt("tIntake"));
+                sIntake = new SolenoidPair(config.getAsInt("sIntakeA"), 
                     config.getAsInt("sIntakeB"), true, true, false);
-            joystick = JStickMultiton.getJStick(2);
+                joystick = JStickMultiton.getJStick(2);
         }
 	
 	public void teleopPeriodic() {
