@@ -24,12 +24,13 @@ public class ShooterSubsystem extends Subsystem {
 
 	public void teleopPeriodic() {
 		if (joystick.isPressed(3) && loaded == false) {
-			//Need code Here to pull back the shooter pullBack amount
+			//Need code here to pull back the shooter pullBack amount
+			sWinch.set(true);
 			loaded = true;
 		}
 		
 		if (joystick.isPressed(1) && loaded == true) {
-			//Need code here to move winch back to where it was
+			sWinch.set(false);
 			loaded = false;
 		}
 		
