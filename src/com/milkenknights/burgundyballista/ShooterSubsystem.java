@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package com.milkenknights.burgundyballista;
 
@@ -10,10 +5,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 
 
-/**
- *
- * @author Jake
- */
 public class ShooterSubsystem extends Subsystem {
 	Talon tWinch;
 	JStick joystick;
@@ -32,9 +23,17 @@ public class ShooterSubsystem extends Subsystem {
 	}
 
 	public void teleopPeriodic() {
-		if (joystick.isReleased(3) && loaded == false) {
-
+		if (joystick.isPressed(3) && loaded == false) {
+			//Need code Here to pull back the shooter pullBack amount
+			loaded = true;
 		}
+		
+		if (joystick.isPressed(1) && loaded == true) {
+			//Need code here to move winch back to where it was
+			loaded = false;
+		}
+		
+		
 
 	}
 
