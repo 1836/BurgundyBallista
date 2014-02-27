@@ -32,7 +32,6 @@ public class RobotConfig {
 		defaultConfig.put("sWinch","4");
 		defaultConfig.put("sIntakeA","6");
 		defaultConfig.put("sIntakeB","7");
-		defaultConfig.put("winchPullBack", "1");
 	}
 
 	final public String get(Object k) {
