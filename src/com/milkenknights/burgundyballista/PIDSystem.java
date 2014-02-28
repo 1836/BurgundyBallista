@@ -44,6 +44,6 @@ public class PIDSystem {
 	public double update (double position) {
 		double error = setpoint - position;
 		double output = PFunction(error) + IFunction(error) + DFunction(error);
-		return output
+		return output;
 	}
 }

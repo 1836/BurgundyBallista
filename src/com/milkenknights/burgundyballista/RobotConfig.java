@@ -33,6 +33,9 @@ public class RobotConfig {
 		defaultConfig.put("sIntakeA","6");
 		defaultConfig.put("sIntakeB","7");
 		defaultConfig.put("winchPullBack", "1");
+		defaultConfig.put("shooterPIDkp", ".1");
+		defaultConfig.put("shooterPIDki", "0");
+		defaultConfig.put("shooterPIDkd", "0");
 	}
 
 	final public String get(Object k) {
