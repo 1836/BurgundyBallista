@@ -51,11 +51,11 @@ public class Knight extends IterativeRobot {
 		
 		subsystems = new Vector(10);
 		
-		subsystems.addElement(new DriveSubsystem(config));
-		subsystems.addElement(new CasterSubsystem(config));
-		subsystems.addElement(new ShooterSubsystem(config));
-		subsystems.addElement(new IntakeSubsystem(config));
-		subsystems.addElement(new FourBarSubsystem(config));
+		subsystems.addElement(driveSubsystem);
+		subsystems.addElement(casterSubsystem);
+		subsystems.addElement(shooterSubsystem);
+		subsystems.addElement(intakeSubsystem);
+		subsystems.addElement(fourBarSubsystem);
 		
 		// since no more subsystems will be added, we can free the remaining
 		// memory
