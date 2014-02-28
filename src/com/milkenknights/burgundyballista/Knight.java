@@ -31,7 +31,7 @@ public class Knight extends IterativeRobot {
 	CasterSubsystem casterSubsystem;
 	ShooterSubsystem shooterSubsystem;
 	IntakeSubsystem intakeSubsystem;
-	
+	FourBarSubsystem fourBarSubsystem;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -46,6 +46,7 @@ public class Knight extends IterativeRobot {
 		driveSubsystem = new DriveSubsystem(config);
 		shooterSubsystem = new ShooterSubsystem(config);
 		intakeSubsystem = new IntakeSubsystem(config);
+		fourBarSubsystem = new FourBarSubsystem(config);
 		
 		
 		subsystems = new Vector(10);
@@ -54,6 +55,7 @@ public class Knight extends IterativeRobot {
 		subsystems.addElement(new CasterSubsystem(config));
 		subsystems.addElement(new ShooterSubsystem(config));
 		subsystems.addElement(new IntakeSubsystem(config));
+		subsystems.addElement(new FourBarSubsystem(config));
 		
 		// since no more subsystems will be added, we can free the remaining
 		// memory
