@@ -36,6 +36,10 @@ public class RobotConfig {
 		defaultConfig.put("shooterPIDkp", ".1");
 		defaultConfig.put("shooterPIDki", "0");
 		defaultConfig.put("shooterPIDkd", "0");
+		defaultConfig.put("driveDistance", "1");
+		defaultConfig.put("drivePIFkp", ".1");
+		defaultConfig.put("drivePIFki", "0");
+		defaultConfig.put("drivePIFkd", "0");
 	}
 
 	final public String get(Object k) {

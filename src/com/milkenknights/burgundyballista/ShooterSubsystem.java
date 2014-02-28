@@ -11,7 +11,6 @@ public class ShooterSubsystem extends Subsystem {
 	Talon tWinch;
 	JStick joystick;
 	Solenoid sWinch;
-	
 	PIDSystem PID;
 
 	boolean loaded;

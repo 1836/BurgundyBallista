@@ -6,6 +6,8 @@
 
 package com.milkenknights.burgundyballista;
 
+import edu.wpi.first.wpilibj.CounterBase;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
@@ -16,8 +18,17 @@ public class DriveSubsystem extends Subsystem {
 	JStick xbox;
 	Drive drive;
 	SolenoidPair driveGear;
+	
+	PIDSystem leftPID;
+	PIDSystem rightPID;
+	
+	Encoder leftDriveEncoder;
+	Encoder rightDriveEncoder;
+	
 	boolean normalDriveGear;
 	boolean slowMode;
+	
+	
 	public DriveSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
 		drive = new Drive(new Talon(config.getAsInt("tLeftWheel")),
@@ -25,6 +36,22 @@ public class DriveSubsystem extends Subsystem {
 		// this solenoid pair is TRUE if the robot is in high gear
 		driveGear = new SolenoidPair(config.getAsInt("sDriveGearHigh"),
 				config.getAsInt("sDriveGearLow"), true, false, true);
+		
+		leftPID = new PIDSystem(config.getAsDouble("driveDistance"),
+				config.getAsDouble("drivePIDkp"),
+				config.getAsDouble("drivePIDki"),
+				config.getAsDouble("drivePIDkd"));
+		rightPID = new PIDSystem(config.getAsDouble("driveDistance"),
+				config.getAsDouble("drivePIDkp"),
+				config.getAsDouble("drivePIDki"),
+				config.getAsDouble("drivePIDkd"));
+		
+		leftDriveEncoder = new Encoder(config.getAsInt("leftEncA"),
+				config.getAsInt("leftEncB"),
+				true, CounterBase.EncodingType.k4X);
+		rightDriveEncoder = new Encoder(config.getAsInt("rightEncA"),
+				config.getAsInt("rightEncB"),
+				true, CounterBase.EncodingType.k4X);
 	}
 	
 	public void teleopPeriodic() {
@@ -53,4 +80,10 @@ public class DriveSubsystem extends Subsystem {
 		
         drive.cheesyDrive(power, turn, trigDown);
 	}
+	
+	public void autonomousPeriodic() {
+			leftPID.update(leftDriveEncoder.getDistance());
+			rightPID.update(rightDriveEncoder.getDistance());
+	}
+	
 }
