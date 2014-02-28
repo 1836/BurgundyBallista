@@ -23,6 +23,12 @@ public class PIDSystem {
 		this.lastError = 0;
 	}
 
+	public void changeSetpoint(double setpoint) {
+		this.setpoint = setpoint;
+		this.sumOfError = 0;
+		this.lastError = 0;
+	}
+
 	private double PFunction(double error) {
 		double pValue = kp * error;
 		return pValue;
