@@ -49,7 +49,7 @@ public class ShooterSubsystem extends Subsystem {
 		}
 		
 		if (runPID) {
-			PID.update(shooterEncoder.getDistance());
+			tWinch.set(PID.update(shooterEncoder.getDistance()));
 		}
 		
 		
@@ -64,7 +64,7 @@ public class ShooterSubsystem extends Subsystem {
 			shoot();
 		}
 		if (runPID) {
-			PID.update(shooterEncoder.getDistance());
+			tWinch.set(PID.update(shooterEncoder.getDistance()));
 		}
 	}
 	

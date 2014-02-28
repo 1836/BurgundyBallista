@@ -82,8 +82,8 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	public void autonomousPeriodic() {
-			leftPID.update(leftDriveEncoder.getDistance());
-			rightPID.update(rightDriveEncoder.getDistance());
+			drive.tankDrive(leftPID.update(leftDriveEncoder.getDistance()),
+			rightPID.update(rightDriveEncoder.getDistance()));
 	}
 	
 }
