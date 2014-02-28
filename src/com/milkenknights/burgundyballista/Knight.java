@@ -70,8 +70,8 @@ public class Knight extends IterativeRobot {
 			((Subsystem) e.nextElement()).teleopPeriodic();
 		}
                 
-                // Feed the Watchdog. Makes the motors not fail every 100ms
-                Watchdog.getInstance().feed();
+        // Feed the Watchdog. Makes the motors not fail every 100ms
+        Watchdog.getInstance().feed();
     }
     
     /**
