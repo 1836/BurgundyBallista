@@ -40,12 +40,9 @@ public class ShooterSubsystem extends Subsystem {
 	}
 
 	public void teleopPeriodic() {
-		if (joystick.isPressed(3)) {
-			load();
-		}
-		
 		if (joystick.isPressed(1)) {
 			shoot();
+			load();
 		}
 		
 		if (runPID) {
@@ -62,6 +59,7 @@ public class ShooterSubsystem extends Subsystem {
 		}
 		else if (step == 2) {
 			shoot();
+			load();
 		}
 		if (runPID) {
 			tWinch.set(PID.update(shooterEncoder.getDistance()));

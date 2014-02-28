@@ -37,14 +37,18 @@ public class RobotConfig {
 		defaultConfig.put("shooterPIDki", "0");
 		defaultConfig.put("shooterPIDkd", "0");
 		defaultConfig.put("driveDistance", "1");
-		defaultConfig.put("drivePIFkp", ".1");
-		defaultConfig.put("drivePIFki", "0");
-		defaultConfig.put("drivePIFkd", "0");
+		defaultConfig.put("drivePIDkp", ".1");
+		defaultConfig.put("drivePIDki", "0");
+		defaultConfig.put("drivePIDkd", "0");
 		defaultConfig.put("gyroAngle", "1");
 		defaultConfig.put("gyrokp", ".1");
 		defaultConfig.put("gyroki", "0");
 		defaultConfig.put("gyrokd", "0");
 		defaultConfig.put("gyro", "1");
+		defaultConfig.put("fourBarDistance", "1");
+		defaultConfig.put("fourBarPIDkp", ".1");
+		defaultConfig.put("fourBarPIDki", "0");
+		defaultConfig.put("fourBarPIDkd", "0");
 	}
 
 	final public String get(Object k) {

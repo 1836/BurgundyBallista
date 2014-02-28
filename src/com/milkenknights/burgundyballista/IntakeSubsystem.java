@@ -4,7 +4,7 @@ package com.milkenknights.burgundyballista;
 import edu.wpi.first.wpilibj.Talon;
 
 
-public class IntakeSubsystem {
+public class IntakeSubsystem extends Subsystem{
 	Talon tIntake;
 	SolenoidPair sIntake;
 	JStick joystick;
@@ -32,7 +32,7 @@ public class IntakeSubsystem {
 			tIntake.set(0);
 		}
                 
-		if (joystick.isPressed(2)) {
+		if (joystick.isPressed(3)) {
 			sIntake.set(!solenoidOn);
 			solenoidOn =! solenoidOn;
 		}

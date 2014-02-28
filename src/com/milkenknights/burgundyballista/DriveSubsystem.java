@@ -31,6 +31,8 @@ public class DriveSubsystem extends Subsystem {
 	
 	boolean normalDriveGear;
 	boolean slowMode;
+	boolean runPID;
+	boolean runGyro;
 	
 	
 	public DriveSubsystem(RobotConfig config) {
@@ -99,12 +101,28 @@ public class DriveSubsystem extends Subsystem {
 	
 	public void autonomousPeriodic(boolean rungyro) {
 		if (rungyro) {
-			drive.tankDrive(gyroPID.update(gyro.getAngle()), -gyroPID.update(gyro.getAngle()));
+			runGyro = true;
 		}
 		else {
-			drive.tankDrive(leftPID.update(leftDriveEncoder.getDistance()),
-			rightPID.update(rightDriveEncoder.getDistance()));
+			runPID = true;
 		}
+		
+		if (runGyro) {
+			drive.tankDrive(gyroPID.update(gyro.getAngle()), 
+					-gyroPID.update(gyro.getAngle()));
+			if (gyroPID.update(gyro.getAngle()) == 0) {
+				runGyro = false;
+			}
+		}
+		else if (runPID) {
+			drive.tankDrive(leftPID.update(leftDriveEncoder.getDistance()), 
+					rightPID.update(rightDriveEncoder.getDistance()));
+			if (leftPID.update(leftDriveEncoder.getDistance()) == 0 &&
+					rightPID.update(rightDriveEncoder.getDistance()) == 0) {
+				runPID = false;
+			}
+		}
+		
 	}
 	
 }

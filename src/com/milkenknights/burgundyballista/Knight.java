@@ -29,6 +29,9 @@ public class Knight extends IterativeRobot {
 	Compressor compressor;
 	DriveSubsystem driveSubsystem;
 	CasterSubsystem casterSubsystem;
+	ShooterSubsystem shooterSubsystem;
+	IntakeSubsystem intakeSubsystem;
+	
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -40,11 +43,17 @@ public class Knight extends IterativeRobot {
 		
 		compressor = new Compressor(config.getAsInt("compressorPressureSwitch"),
 				config.getAsInt("compressorRelayChannel"));
+		driveSubsystem = new DriveSubsystem(config);
+		shooterSubsystem = new ShooterSubsystem(config);
+		intakeSubsystem = new IntakeSubsystem(config);
+		
 		
 		subsystems = new Vector(10);
 		
 		subsystems.addElement(new DriveSubsystem(config));
 		subsystems.addElement(new CasterSubsystem(config));
+		subsystems.addElement(new ShooterSubsystem(config));
+		subsystems.addElement(new IntakeSubsystem(config));
 		
 		// since no more subsystems will be added, we can free the remaining
 		// memory
@@ -57,12 +66,12 @@ public class Knight extends IterativeRobot {
      * This function is called periodically during autonomous
      */
 	public void autonomousInit() {
-		
+		driveSubsystem.autonomousInit();
 	}
 	
 	
     public void autonomousPeriodic() {
-
+		
     }
 
     /**
