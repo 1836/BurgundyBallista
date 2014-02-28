@@ -40,6 +40,11 @@ public class RobotConfig {
 		defaultConfig.put("drivePIFkp", ".1");
 		defaultConfig.put("drivePIFki", "0");
 		defaultConfig.put("drivePIFkd", "0");
+		defaultConfig.put("gyroAngle", "1");
+		defaultConfig.put("gyrokp", ".1");
+		defaultConfig.put("gyroki", "0");
+		defaultConfig.put("gyrokd", "0");
+		defaultConfig.put("gyro", "1");
 	}
 
 	final public String get(Object k) {

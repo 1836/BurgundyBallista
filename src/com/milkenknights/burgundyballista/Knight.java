@@ -56,6 +56,11 @@ public class Knight extends IterativeRobot {
     /**
      * This function is called periodically during autonomous
      */
+	public void autonomousInit() {
+		
+	}
+	
+	
     public void autonomousPeriodic() {
 
     }

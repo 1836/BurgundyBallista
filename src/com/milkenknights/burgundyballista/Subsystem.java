@@ -18,4 +18,8 @@ public abstract class Subsystem {
 	public void autonomousPeriodic() {
 		
 	}
+	
+	public void autonomousInit() {
+		
+	}
 }

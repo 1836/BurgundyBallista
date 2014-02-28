@@ -8,6 +8,7 @@ package com.milkenknights.burgundyballista;
 
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
@@ -21,9 +22,12 @@ public class DriveSubsystem extends Subsystem {
 	
 	PIDSystem leftPID;
 	PIDSystem rightPID;
+	PIDSystem gyroPID;
 	
 	Encoder leftDriveEncoder;
 	Encoder rightDriveEncoder;
+	
+	Gyro gyro;
 	
 	boolean normalDriveGear;
 	boolean slowMode;
@@ -45,6 +49,10 @@ public class DriveSubsystem extends Subsystem {
 				config.getAsDouble("drivePIDkp"),
 				config.getAsDouble("drivePIDki"),
 				config.getAsDouble("drivePIDkd"));
+		gyroPID = new PIDSystem(config.getAsDouble("gyroAngle"),
+				config.getAsDouble("gyrokp"),
+				config.getAsDouble("gyroki"),
+				config.getAsDouble("gyrokd"));
 		
 		leftDriveEncoder = new Encoder(config.getAsInt("leftEncA"),
 				config.getAsInt("leftEncB"),
@@ -52,6 +60,10 @@ public class DriveSubsystem extends Subsystem {
 		rightDriveEncoder = new Encoder(config.getAsInt("rightEncA"),
 				config.getAsInt("rightEncB"),
 				true, CounterBase.EncodingType.k4X);
+		
+		gyro = new Gyro(config.getAsInt("gyro"));
+		
+		gyro.reset();
 	}
 	
 	public void teleopPeriodic() {
@@ -81,9 +93,18 @@ public class DriveSubsystem extends Subsystem {
         drive.cheesyDrive(power, turn, trigDown);
 	}
 	
-	public void autonomousPeriodic() {
+	public void autonomousInit() {
+		gyro.reset();
+	}
+	
+	public void autonomousPeriodic(boolean rungyro) {
+		if (rungyro) {
+			drive.tankDrive(gyroPID.update(gyro.getAngle()), -gyroPID.update(gyro.getAngle()));
+		}
+		else {
 			drive.tankDrive(leftPID.update(leftDriveEncoder.getDistance()),
 			rightPID.update(rightDriveEncoder.getDistance()));
+		}
 	}
 	
 }
