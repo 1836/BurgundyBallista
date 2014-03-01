@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -93,6 +94,8 @@ public class DriveSubsystem extends Subsystem {
 		}
 		
         drive.cheesyDrive(power, turn, trigDown);
+		
+		SmartDashboard.putBoolean("Drive gear high:", driveGear.get());
 	}
 	
 	public void autonomousInit() {

@@ -2,6 +2,7 @@
 package com.milkenknights.burgundyballista;
 
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class IntakeSubsystem extends Subsystem{
@@ -36,6 +37,23 @@ public class IntakeSubsystem extends Subsystem{
 			sIntake.set(!solenoidOn);
 			solenoidOn =! solenoidOn;
 		}
+		
+		SmartDashboard.putBoolean("Intake up", !sIntake.get());
      
 	}
+	
+	public void autonomousInit() {
+		sIntake.set(false);
+	}
+	
+	public void autonomousPeriodic(int step) {
+		if (step == 1) {
+			tIntake.set(1);
+		}
+		else if (step == 2) {
+			tIntake.set(0);
+			sIntake.set(true);
+		}
+	}
+	
 }
