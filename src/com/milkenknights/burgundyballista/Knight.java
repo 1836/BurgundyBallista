@@ -10,7 +10,9 @@ package com.milkenknights.burgundyballista;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Watchdog;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -32,7 +34,13 @@ public class Knight extends IterativeRobot {
 	ShooterSubsystem shooterSubsystem;
 	IntakeSubsystem intakeSubsystem;
 	FourBarSubsystem fourBarSubsystem;
+	Vision vision;
 	
+	boolean startSideLeft = true;
+	
+	double startTime;
+	boolean shootFirst;
+	boolean autonomousBallShot;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -48,6 +56,7 @@ public class Knight extends IterativeRobot {
 		intakeSubsystem = new IntakeSubsystem(config);
 		fourBarSubsystem = new FourBarSubsystem(config);
 		
+		vision = new Vision();
 		
 		subsystems = new Vector(10);
 		
@@ -62,18 +71,56 @@ public class Knight extends IterativeRobot {
 		subsystems.trimToSize();
 		
 		compressor.start();
+		
+		//Smart dashboard
+		SmartDashboard.getBoolean("Starting on left side?", startSideLeft);
     }
 
     /**
      * This function is called periodically during autonomous
      */
 	public void autonomousInit() {
+		startTime = Timer.getFPGATimestamp();
+		
+		int startSide;
+		int hotSide;
 		driveSubsystem.autonomousInit();
+		shooterSubsystem.autonomousInit();
+		hotSide = vision.isHot();
+		if (startSideLeft) {
+			startSide = 1;
+		}
+		else {
+			startSide = 2;
+		}
+		if (hotSide == 0 || hotSide == -1) {
+			//Error or can't detect hot side
+		}
+		if (hotSide == startSide) {
+			shootFirst = true;
+		}
+		else {
+			shootFirst = false;
+		}
 	}
 	
 	
     public void autonomousPeriodic() {
-		
+		double currentTime = Timer.getFPGATimestamp() - startTime;
+		if (currentTime <= 5 && shootFirst && autonomousBallShot == false) {
+			shooterSubsystem.autonomousPeriodic();
+			autonomousBallShot = true;
+		}
+		else if (currentTime > 5 && shootFirst) {
+			driveSubsystem.autonomousPeriodic();
+		}
+		if (currentTime <= 5 && shootFirst == false) {
+			driveSubsystem.autonomousPeriodic();
+		}
+		else if (currentTime > 5 && shootFirst == false && autonomousBallShot == false) {
+			shooterSubsystem.autonomousPeriodic();
+			autonomousBallShot = true;
+		}
     }
 
     /**

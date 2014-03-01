@@ -53,14 +53,13 @@ public class ShooterSubsystem extends Subsystem {
 
 	}
 	
-	public void autonomousPeriodic(int step) {
-		if (step == 1) {
-			load();
-		}
-		else if (step == 2) {
+	public void autonomousInit() {
+		load();
+	}
+	
+	public void autonomousPeriodic() {
 			shoot();
 			load();
-		}
 		if (runPID) {
 			tWinch.set(PID.update(shooterEncoder.getDistance()));
 		}
