@@ -34,7 +34,8 @@ public class Knight extends IterativeRobot {
 	ShooterSubsystem shooterSubsystem;
 	IntakeSubsystem intakeSubsystem;
 	FourBarSubsystem fourBarSubsystem;
-	Vision vision;
+	
+	//Vision vision;
 	
 	//boolean startSideLeft = true;
 	
@@ -55,8 +56,9 @@ public class Knight extends IterativeRobot {
 		shooterSubsystem = new ShooterSubsystem(config);
 		intakeSubsystem = new IntakeSubsystem(config);
 		fourBarSubsystem = new FourBarSubsystem(config);
+		casterSubsystem = new CasterSubsystem(config);
 		
-		vision = new Vision();
+		//vision = new Vision();
 		
 		subsystems = new Vector(10);
 		
