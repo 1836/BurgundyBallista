@@ -35,13 +35,13 @@ public class Knight extends IterativeRobot {
 	IntakeSubsystem intakeSubsystem;
 	FourBarSubsystem fourBarSubsystem;
 	
-	//Vision vision;
+	Vision vision;
 	
-	//boolean startSideLeft = true;
+	boolean startSideLeft = true;
 	
 	double startTime;
-	//boolean shootFirst;
-	//boolean autonomousBallShot;
+	boolean shootFirst;
+	boolean autonomousBallShot;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -58,7 +58,7 @@ public class Knight extends IterativeRobot {
 		fourBarSubsystem = new FourBarSubsystem(config);
 		casterSubsystem = new CasterSubsystem(config);
 		
-		//vision = new Vision();
+		vision = new Vision();
 		
 		subsystems = new Vector(10);
 		
@@ -74,7 +74,7 @@ public class Knight extends IterativeRobot {
 		
 		compressor.start();
 		
-		//SmartDashboard.getBoolean("Starting on left side?", startSideLeft);
+		SmartDashboard.getBoolean("Starting on left side?", startSideLeft);
     }
 
     /**
@@ -85,7 +85,7 @@ public class Knight extends IterativeRobot {
 		
 		driveSubsystem.autonomousInit();
 		intakeSubsystem.autonomousInit();
-		/*
+		
 		shooterSubsystem.autonomousInit();
 
 		int startSide;
@@ -107,20 +107,20 @@ public class Knight extends IterativeRobot {
 		else {
 			shootFirst = false;
 		}
-		*/
+		
 	}
 	
 	
     public void autonomousPeriodic() {
 		double currentTime = Timer.getFPGATimestamp() - startTime;
-		
+		/*
 		driveSubsystem.autonomousPeriodic(false);
 		intakeSubsystem.autonomousPeriodic(1);
 		if (currentTime > 3) {
 			intakeSubsystem.autonomousPeriodic(2);
 		}
+		*/
 		
-		/*
 		if (currentTime <= 5 && shootFirst && autonomousBallShot == false) {
 			shooterSubsystem.autonomousPeriodic();
 			autonomousBallShot = true;
@@ -135,7 +135,7 @@ public class Knight extends IterativeRobot {
 			shooterSubsystem.autonomousPeriodic();
 			autonomousBallShot = true;
 		}
-		*/
+		
     }
 
     /**
