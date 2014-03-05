@@ -35,7 +35,7 @@ public class Knight extends IterativeRobot {
 	IntakeSubsystem intakeSubsystem;
 	FourBarSubsystem fourBarSubsystem;
 	
-	Vision vision;
+	//Vision vision;
 	
 	boolean startSideLeft = true;
 	
@@ -50,15 +50,14 @@ public class Knight extends IterativeRobot {
 		config = new ConfigFile("robot-config.txt");
 		config.loadFile();
 		
-		compressor = new Compressor(config.getAsInt("compressorPressureSwitch"),
-				config.getAsInt("compressorRelayChannel"));
+		compressor = new Compressor(5, 2);
 		driveSubsystem = new DriveSubsystem(config);
 		shooterSubsystem = new ShooterSubsystem(config);
-		intakeSubsystem = new IntakeSubsystem(config);
-		fourBarSubsystem = new FourBarSubsystem(config);
+                fourBarSubsystem = new FourBarSubsystem(config);
+		intakeSubsystem = new IntakeSubsystem(config, fourBarSubsystem);
 		casterSubsystem = new CasterSubsystem(config);
 		
-		vision = new Vision();
+		//vision = new Vision();
 		
 		subsystems = new Vector(10);
 		
@@ -71,6 +70,8 @@ public class Knight extends IterativeRobot {
 		// since no more subsystems will be added, we can free the remaining
 		// memory
 		subsystems.trimToSize();
+                
+                fourBarSubsystem.robotInit();
 		
 		compressor.start();
 		
@@ -85,13 +86,13 @@ public class Knight extends IterativeRobot {
 		
 		driveSubsystem.autonomousInit();
 		intakeSubsystem.autonomousInit();
-		
+		/*
 		shooterSubsystem.autonomousInit();
 
 		int startSide;
 		int hotSide;
 		
-		hotSide = vision.isHot();
+		hotSide = 1; //vision.isHot();
 		if (startSideLeft) {
 			startSide = 1;
 		}
@@ -106,20 +107,28 @@ public class Knight extends IterativeRobot {
 		}
 		else {
 			shootFirst = false;
-		}
+		}*/
 		
 	}
 	
-	
+	boolean alreadyShot;
     public void autonomousPeriodic() {
 		double currentTime = Timer.getFPGATimestamp() - startTime;
-		/*
-		driveSubsystem.autonomousPeriodic(false);
-		intakeSubsystem.autonomousPeriodic(1);
+		
+		//driveSubsystem.autonomousPeriodic(false);
+                if (currentTime <= 5) {
+                    driveSubsystem.drive(true);
+    }
+                else if (alreadyShot == false) {
+                    alreadyShot = true;
+                    driveSubsystem.drive(false);
+                    intakeSubsystem.autonomousPeriodic(1);
+                }
+                /*
 		if (currentTime > 3) {
 			intakeSubsystem.autonomousPeriodic(2);
 		}
-		*/
+		
 		
 		if (currentTime <= 5 && shootFirst && autonomousBallShot == false) {
 			shooterSubsystem.autonomousPeriodic();
@@ -135,7 +144,7 @@ public class Knight extends IterativeRobot {
 			shooterSubsystem.autonomousPeriodic();
 			autonomousBallShot = true;
 		}
-		
+		*/
     }
 
     /**

@@ -30,33 +30,12 @@ public class RobotConfig {
 		defaultConfig.put("tFourBar","5");
 		defaultConfig.put("sGrabber","3");
 		defaultConfig.put("sWinch","4");
-		defaultConfig.put("sIntakeA","3");
-		//defaultConfig.put("sIntakeB","7");
-		defaultConfig.put("winchPullBack", "1");
-		defaultConfig.put("shooterPIDkp", ".1");
-		defaultConfig.put("shooterPIDki", "0");
-		defaultConfig.put("shooterPIDkd", "0");
-		defaultConfig.put("driveDistance", "1");
-		defaultConfig.put("drivePIDkp", ".1");
-		defaultConfig.put("drivePIDki", "0.01");
-		defaultConfig.put("drivePIDkd", "0.001");
-		defaultConfig.put("gyroAngle", "1");
-		defaultConfig.put("gyrokp", ".1");
-		defaultConfig.put("gyroki", "0.01");
-		defaultConfig.put("gyrokd", "0.001");
-		defaultConfig.put("gyro", "1");
-		defaultConfig.put("fourBarDistance", "200");
-                defaultConfig.put("fourBarPIDkpUp", "0.0125");
-		defaultConfig.put("fourBarPIDkiUp", "0.0");
-		defaultConfig.put("fourBarPIDkdUp", "0.002");
-                defaultConfig.put("fourBarPIDkpDown", "0.009");
-		defaultConfig.put("fourBarPIDkiDown", "0.0");
-		defaultConfig.put("fourBarPIDkdDown", "0.0001");
-                defaultConfig.put("fourBarDistanceDown", "30");
+		defaultConfig.put("sIntakeA","6");
+		defaultConfig.put("sIntakeB","7");
 	}
 
 	final public String get(Object k) {
-		Object v = customGet(k);
+		String v = customGet(k);
 		
 		return (v != null ? v : defaultConfig.get(k)).toString();
 	}
@@ -70,7 +49,7 @@ public class RobotConfig {
 	}
 	
 	// This method should be overridden by an extending class
-	protected Object customGet(Object k) {
+	public String customGet(Object k) {
 		return null;
 	}
 }

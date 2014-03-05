@@ -38,24 +38,24 @@ public class DriveSubsystem extends Subsystem {
 	
 	public DriveSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
-		drive = new Drive(new Talon(config.getAsInt("tLeftWheel")),
-				new Talon(config.getAsInt("tRightWheel")));
+		drive = new Drive(new Talon(10),
+				new Talon(9));
 		// this solenoid pair is TRUE if the robot is in high gear
-		driveGear = new SolenoidPair(config.getAsInt("sDriveGearHigh"),
-				config.getAsInt("sDriveGearLow"), true, false, true);
+		driveGear = new SolenoidPair(2,
+				1, true, false, true);
 		
 		leftPID = new PIDSystem(config.getAsDouble("driveDistance"),
 				config.getAsDouble("drivePIDkp"),
 				config.getAsDouble("drivePIDki"),
-				config.getAsDouble("drivePIDkd"));
+				config.getAsDouble("drivePIDkd"), .001);
 		rightPID = new PIDSystem(config.getAsDouble("driveDistance"),
 				config.getAsDouble("drivePIDkp"),
 				config.getAsDouble("drivePIDki"),
-				config.getAsDouble("drivePIDkd"));
+				config.getAsDouble("drivePIDkd"), .001);
 		gyroPID = new PIDSystem(config.getAsDouble("gyroAngle"),
 				config.getAsDouble("gyrokp"),
 				config.getAsDouble("gyroki"),
-				config.getAsDouble("gyrokd"));
+				config.getAsDouble("gyrokd"), .001);
 		
 		leftDriveEncoder = new Encoder(config.getAsInt("leftEncA"),
 				config.getAsInt("leftEncB"),
@@ -92,9 +92,11 @@ public class DriveSubsystem extends Subsystem {
 		if (slowMode) {
 			power = power * .5;
 		}
-		
-        drive.cheesyDrive(power, turn, trigDown);
-		
+		SmartDashboard.putDouble("LSY", xbox.getAxis(JStick.XBOX_LSY));
+                SmartDashboard.putDouble("RSX", xbox.getAxis(JStick.XBOX_RSX));
+                drive.cheesyDrive(power, -turn, trigDown);
+
+                                
 		SmartDashboard.putBoolean("Drive gear high:", driveGear.get());
 	}
 	
@@ -127,5 +129,16 @@ public class DriveSubsystem extends Subsystem {
 		}
 		
 	}
+        
+        public void drive(boolean a) {
+            if (a) {
+                driveGear.set(false);
+                drive.tankDrive(1,1);
+                        }
+            else {
+                drive.tankDrive(0,0);
+                driveGear.set(true);
+            }
+        }
 	
 }

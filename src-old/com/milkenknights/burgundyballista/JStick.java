@@ -93,7 +93,7 @@ public class JStick {
 	 */
 	public boolean isPressed(int b) {
 		if(b >= 0 && b < buttonPressed.length)
-			return buttonPressed[b] && !buttonLastPressed[b];
+			return buttonPressed[b];
 		else return false;
 	}
 

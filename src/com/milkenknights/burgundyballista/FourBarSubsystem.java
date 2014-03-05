@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.milkenknights.burgundyballista;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -13,45 +12,65 @@ import edu.wpi.first.wpilibj.Talon;
  *
  * @author Jake
  */
-public class FourBarSubsystem extends Subsystem{
-	Talon tFourBar;
-	PIDSystem fourBarPID;
-	Encoder encoder;
-	JStick joystick;
-	
-	boolean runPID;
-	boolean position;
-	
-	double positionDistance;
-	public FourBarSubsystem (RobotConfig config) {
-		tFourBar = new Talon(config.getAsInt("tFourBar"));
-		encoder = new Encoder(config.getAsInt("fourBarEncA"),
-				config.getAsInt("fourBarEncB"));
-		fourBarPID = new PIDSystem(config.getAsDouble("fourBarDistance"),
-				config.getAsDouble("fourBarPIDkp"),
-				config.getAsDouble("fourBarPIDki"),
-				config.getAsDouble("fourBarPIDkd"));
-		
-		joystick = JStickMultiton.getJStick(2);
-		
-		positionDistance = config.getAsDouble("fourBarDistance");
-	}
-	
-	public void teleopPeriodic() {
-		if (joystick.isPressed(2)) {
-			position =! position;
-			changePosition(position);
-		}
-	}
-	
-	public void autonomousPeriodic(boolean pos) {
+public class FourBarSubsystem extends Subsystem {
+
+    Talon tFourBar;
+    PIDSystem fourBarPIDUp;
+    PIDSystem fourBarPIDDown;
+    Encoder encoder;
+    JStick joystick;
+    
+    double outtakePosition;
+
+    boolean position;
+    boolean goingUp;
+
+    double positionDistance;
+
+    public FourBarSubsystem(RobotConfig config) {
+        tFourBar = new Talon(config.getAsInt("tFourBar"));
+        encoder = new Encoder(config.getAsInt("fourBarEncA"),
+                config.getAsInt("fourBarEncB"));
+        fourBarPIDUp = new PIDSystem(config.getAsDouble("fourBarDistance"),
+                config.getAsDouble("fourBarPIDkpUp"),
+                config.getAsDouble("fourBarPIDkiUp"),
+                config.getAsDouble("fourBarPIDkdUp"), 0);
+        
+        fourBarPIDDown = new PIDSystem(0,
+                config.getAsDouble("fourBarPIDkpDown"),
+                config.getAsDouble("fourBarPIDkiDown"),
+                config.getAsDouble("fourBarPIDkdDown"), 0);
+
+        joystick = JStickMultiton.getJStick(2);
+
+        positionDistance = config.getAsDouble("fourBarDistance");
+        
+        outtakePosition = config.getAsDouble("fourBarDistanceDown");
+    }
+
+    public void robotInit() {
+        encoder.start();
+        encoder.reset();
+    }
+
+    public void teleopPeriodic() {
+        if (joystick.isPressed(2)) {
+            position = !position;
+            changePosition(position);
+        }
+        if (goingUp) {
+            double out = fourBarPIDUp.update(encoder.getDistance());
+            tFourBar.set(out);
+        } else {
+            double out = fourBarPIDDown.update(encoder.getDistance());
+            tFourBar.set(out);
+        }
+
+    //System.out.println("" + encoder.getDistance());
+}
+
+public void autonomousPeriodic(boolean pos) {
 		changePosition(pos);
-		if (runPID) {
-			tFourBar.set(fourBarPID.update(encoder.getDistance()));
-			if (fourBarPID.update(encoder.getDistance()) == 0) {
-				runPID = false;
-			}
-		}
 	}
 	
 	public void changePosition(boolean a) {
@@ -61,21 +80,27 @@ public class FourBarSubsystem extends Subsystem{
 		else {
 			loadPosition();
 		}
-		if (runPID) {
-			tFourBar.set(fourBarPID.update(encoder.getDistance()));
-			if (fourBarPID.update(encoder.getDistance()) == 0) {
-				runPID = false;
-			}
-		}
+		
 	}
 	
 	public void loadPosition() {
-		fourBarPID.changeSetpoint(0);
-		runPID = true;
+                goingUp = false;
+		fourBarPIDDown.changeSetpoint(0);
 	}
 	
 	public void shootPosition() {
-		fourBarPID.changeSetpoint(positionDistance);
-		runPID = true;
+		fourBarPIDUp.changeSetpoint(positionDistance);
+                goingUp = true;
+
 	}
+        
+        public void outtakePosition() {
+            if (goingUp) {
+                goingUp = false;
+                fourBarPIDDown.changeSetpoint(outtakePosition);
+            } else {
+                goingUp = true;
+                fourBarPIDUp.changeSetpoint(outtakePosition);
+            }
+        }
 }

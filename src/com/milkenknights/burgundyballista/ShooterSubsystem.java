@@ -30,7 +30,7 @@ public class ShooterSubsystem extends Subsystem {
 		sWinch = new Solenoid(config.getAsInt("sWinch"));
 		PID = new PIDSystem(pullBack, config.getAsDouble("shooterPIDkp"),
 				config.getAsDouble("shooterPIDki"),
-				config.getAsDouble("shooterPIDkd"));
+				config.getAsDouble("shooterPIDkd"), .001);
 		runPID = false;
 		shooterEncoder = new Encoder(config.getAsInt("winchEncA"),
 			   config.getAsInt("winchEncB"), true, EncodingType.k4X);
