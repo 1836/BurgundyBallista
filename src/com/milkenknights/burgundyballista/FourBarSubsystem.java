@@ -19,7 +19,7 @@ public class FourBarSubsystem extends Subsystem {
     PIDSystem fourBarPIDDown;
     Encoder encoder;
     JStick joystick;
-    
+
     double outtakePosition;
 
     boolean position;
@@ -35,7 +35,7 @@ public class FourBarSubsystem extends Subsystem {
                 config.getAsDouble("fourBarPIDkpUp"),
                 config.getAsDouble("fourBarPIDkiUp"),
                 config.getAsDouble("fourBarPIDkdUp"), 0);
-        
+
         fourBarPIDDown = new PIDSystem(0,
                 config.getAsDouble("fourBarPIDkpDown"),
                 config.getAsDouble("fourBarPIDkiDown"),
@@ -44,20 +44,18 @@ public class FourBarSubsystem extends Subsystem {
         joystick = JStickMultiton.getJStick(2);
 
         positionDistance = config.getAsDouble("fourBarDistance");
-        
+
         outtakePosition = config.getAsDouble("fourBarDistanceDown");
+        goingUp = false;
     }
 
     public void robotInit() {
         encoder.start();
         encoder.reset();
+        loadPosition();
     }
 
-    public void teleopPeriodic() {
-        if (joystick.isPressed(2)) {
-            position = !position;
-            changePosition(position);
-        }
+    public void pidLoop() {
         if (goingUp) {
             double out = fourBarPIDUp.update(encoder.getDistance());
             tFourBar.set(out);
@@ -65,42 +63,52 @@ public class FourBarSubsystem extends Subsystem {
             double out = fourBarPIDDown.update(encoder.getDistance());
             tFourBar.set(out);
         }
+    }
 
-    //System.out.println("" + encoder.getDistance());
-}
-
-public void autonomousPeriodic(boolean pos) {
-		changePosition(pos);
-	}
-	
-	public void changePosition(boolean a) {
-		if (a) {
-			shootPosition();
-		}
-		else {
-			loadPosition();
-		}
-		
-	}
-	
-	public void loadPosition() {
-                goingUp = false;
-		fourBarPIDDown.changeSetpoint(0);
-	}
-	
-	public void shootPosition() {
-		fourBarPIDUp.changeSetpoint(positionDistance);
-                goingUp = true;
-
-	}
-        
-        public void outtakePosition() {
-            if (goingUp) {
-                goingUp = false;
-                fourBarPIDDown.changeSetpoint(outtakePosition);
-            } else {
-                goingUp = true;
-                fourBarPIDUp.changeSetpoint(outtakePosition);
-            }
+    public void teleopPeriodic() {
+        if (joystick.isPressed(2)) {
+            position = !position;
+            changePosition(position);
         }
+        pidLoop();
+    //System.out.println("" + encoder.getDistance());
+    }
+
+    public void autonomousInit() {
+        outtakePosition();
+    }
+    public void autonomousPeriodic(boolean pos) {
+        pidLoop();
+    }
+
+    public void changePosition(boolean a) {
+        if (a) {
+            shootPosition();
+        } else {
+            loadPosition();
+        }
+
+    }
+
+    public void loadPosition() {
+        goingUp = false;
+        fourBarPIDDown.changeSetpoint(0);
+    }
+
+    public void shootPosition() {
+        fourBarPIDUp.changeSetpoint(positionDistance);
+        goingUp = true;
+
+    }
+
+    public void outtakePosition() {
+        System.out.println("OK");
+        if (goingUp) {
+            goingUp = false;
+            fourBarPIDDown.changeSetpoint(outtakePosition);
+        } else {
+            goingUp = true;
+            fourBarPIDUp.changeSetpoint(outtakePosition);
+        }
+    }
 }

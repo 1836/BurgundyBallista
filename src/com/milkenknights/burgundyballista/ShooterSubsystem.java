@@ -2,6 +2,7 @@
 package com.milkenknights.burgundyballista;
 
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
@@ -11,16 +12,18 @@ public class ShooterSubsystem extends Subsystem {
 	Talon tWinch;
 	JStick joystick;
 	Solenoid sWinch;
-	PIDSystem PID;
+	//PIDSystem PID;
 
 	boolean loaded;
+        
+        DigitalInput limitswitch;
 	
 	// Tells the auton or teleop periodic whether to run the PID update function
 	boolean runPID;
 
 	double pullBack;
 	
-	Encoder shooterEncoder;
+	//Encoder shooterEncoder;
 
 	public ShooterSubsystem(RobotConfig config) {
 		pullBack = config.getAsDouble("winchPullBack");
@@ -28,14 +31,14 @@ public class ShooterSubsystem extends Subsystem {
 		tWinch = new Talon(config.getAsInt("tWinch"));
 		joystick = JStickMultiton.getJStick(2);
 		sWinch = new Solenoid(config.getAsInt("sWinch"));
-		PID = new PIDSystem(pullBack, config.getAsDouble("shooterPIDkp"),
-				config.getAsDouble("shooterPIDki"),
-				config.getAsDouble("shooterPIDkd"), .001);
+		//PID = new PIDSystem(pullBack, config.getAsDouble("shooterPIDkp"),
+				//config.getAsDouble("shooterPIDki"),
+				//config.getAsDouble("shooterPIDkd"), .001);
 		runPID = false;
-		shooterEncoder = new Encoder(config.getAsInt("winchEncA"),
-			   config.getAsInt("winchEncB"), true, EncodingType.k4X);
+		//shooterEncoder = new Encoder(config.getAsInt("winchEncA"),
+			  // config.getAsInt("winchEncB"), true, EncodingType.k4X);
 		
-		shooterEncoder.reset();
+		//shooterEncoder.reset();
 
 	}
 
@@ -44,9 +47,14 @@ public class ShooterSubsystem extends Subsystem {
 			shoot();
 			load();
 		}
+                
+                if (!limitswitch.get()) {
+                    runPID = false;
+                    tWinch.set(0);
+                }
 		
 		if (runPID) {
-			tWinch.set(PID.update(shooterEncoder.getDistance()));
+			tWinch.set(1);
 		}
 		
 		
@@ -61,7 +69,7 @@ public class ShooterSubsystem extends Subsystem {
 			shoot();
 			load();
 		if (runPID) {
-			tWinch.set(PID.update(shooterEncoder.getDistance()));
+			tWinch.set(1);
 		}
 	}
 	
@@ -77,7 +85,6 @@ public class ShooterSubsystem extends Subsystem {
 		if (loaded) {
 			sWinch.set(false);
 			runPID = false;
-			shooterEncoder.reset();
 			loaded = false;
 		}
 	}

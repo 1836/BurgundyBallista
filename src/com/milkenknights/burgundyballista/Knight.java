@@ -84,6 +84,7 @@ public class Knight extends IterativeRobot {
 	public void autonomousInit() {
 		startTime = Timer.getFPGATimestamp();
 		
+                fourBarSubsystem.autonomousInit();
 		driveSubsystem.autonomousInit();
 		intakeSubsystem.autonomousInit();
 		/*
@@ -114,6 +115,9 @@ public class Knight extends IterativeRobot {
 	boolean alreadyShot;
     public void autonomousPeriodic() {
 		double currentTime = Timer.getFPGATimestamp() - startTime;
+                
+                fourBarSubsystem.autonomousPeriodic();
+                driveSubsystem.driveGear.set(true);
 		
 		//driveSubsystem.autonomousPeriodic(false);
                 if (currentTime <= 5) {
