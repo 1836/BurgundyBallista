@@ -53,7 +53,7 @@ public class Knight extends IterativeRobot {
 		compressor = new Compressor(5, 2);
 		driveSubsystem = new DriveSubsystem(config);
 		shooterSubsystem = new ShooterSubsystem(config);
-                fourBarSubsystem = new FourBarSubsystem(config);
+		fourBarSubsystem = new FourBarSubsystem(config);
 		intakeSubsystem = new IntakeSubsystem(config, fourBarSubsystem);
 		casterSubsystem = new CasterSubsystem(config);
 		
@@ -71,7 +71,7 @@ public class Knight extends IterativeRobot {
 		// memory
 		subsystems.trimToSize();
                 
-                fourBarSubsystem.robotInit();
+		fourBarSubsystem.robotInit();
 		
 		compressor.start();
 		
@@ -84,7 +84,7 @@ public class Knight extends IterativeRobot {
 	public void autonomousInit() {
 		startTime = Timer.getFPGATimestamp();
 		
-                fourBarSubsystem.autonomousInit();
+		fourBarSubsystem.autonomousInit();
 		driveSubsystem.autonomousInit();
 		intakeSubsystem.autonomousInit();
 		/*
@@ -113,21 +113,20 @@ public class Knight extends IterativeRobot {
 	}
 	
 	boolean alreadyShot;
-    public void autonomousPeriodic() {
+	public void autonomousPeriodic() {
 		double currentTime = Timer.getFPGATimestamp() - startTime;
-                
-                fourBarSubsystem.autonomousPeriodic();
-                driveSubsystem.driveGear.set(true);
-		
+
+		fourBarSubsystem.autonomousPeriodic();
+		driveSubsystem.driveGear.set(true);
+
 		//driveSubsystem.autonomousPeriodic(false);
-                if (currentTime <= 5) {
-                    driveSubsystem.drive(true);
-    }
-                else if (alreadyShot == false) {
-                    alreadyShot = true;
-                    driveSubsystem.drive(false);
-                    intakeSubsystem.autonomousPeriodic(1);
-                }
+		if (currentTime <= 5) {
+			driveSubsystem.drive(true);
+		} else if (alreadyShot == false) {
+			alreadyShot = true;
+			driveSubsystem.drive(false);
+			intakeSubsystem.autonomousPeriodic(1);
+		}
                 /*
 		if (currentTime > 3) {
 			intakeSubsystem.autonomousPeriodic(2);

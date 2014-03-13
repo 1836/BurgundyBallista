@@ -16,7 +16,7 @@ public class ShooterSubsystem extends Subsystem {
 
 	boolean loaded;
         
-        DigitalInput limitswitch;
+	DigitalInput limitswitch;
 	
 	// Tells the auton or teleop periodic whether to run the PID update function
 	boolean runPID;
@@ -47,27 +47,25 @@ public class ShooterSubsystem extends Subsystem {
 			shoot();
 			load();
 		}
-                
-                if (!limitswitch.get()) {
-                    runPID = false;
-                    tWinch.set(0);
-                }
-		
+
+		if (!limitswitch.get()) {
+			runPID = false;
+			tWinch.set(0);
+		}
+
 		if (runPID) {
 			tWinch.set(1);
 		}
-		
-		
 
 	}
-	
+
 	public void autonomousInit() {
 		load();
 	}
-	
+
 	public void autonomousPeriodic() {
-			shoot();
-			load();
+		shoot();
+		load();
 		if (runPID) {
 			tWinch.set(1);
 		}

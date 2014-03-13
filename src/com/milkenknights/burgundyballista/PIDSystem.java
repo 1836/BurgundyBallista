@@ -1,18 +1,17 @@
 // PID System, just provide it with your tuning variables and setpoint
 // and it will provide a function that takes your current position and
 // outputs a thing.
-
 package com.milkenknights.burgundyballista;
 
 public class PIDSystem {
 
 	private double setpoint;
-        private final double deadzone;
-        
+	private final double deadzone;
+
 	private final double kp;
 	private final double ki;
 	private final double kd;
-	
+
 	private double sumOfError;
 	private double lastError;
 
@@ -21,7 +20,7 @@ public class PIDSystem {
 		this.kp = kp;
 		this.ki = ki;
 		this.kd = kd;
-                this.deadzone = deadzone;
+		this.deadzone = deadzone;
 		this.sumOfError = 0;
 		this.lastError = 0;
 	}
@@ -30,11 +29,11 @@ public class PIDSystem {
 		this.setpoint = setpoint;
 		reset();
 	}
-        
-        public void reset() {
-            this.sumOfError = 0;
-            this.lastError = 0;
-        }
+
+	public void reset() {
+		this.sumOfError = 0;
+		this.lastError = 0;
+	}
 
 	private double PFunction(double error) {
 		double pValue = kp * error;
@@ -54,13 +53,13 @@ public class PIDSystem {
 		return dValue;
 	}
 
-	public double update (double position) {
+	public double update(double position) {
 		double error = setpoint - position;
 		double output = PFunction(error) + IFunction(error) + DFunction(error);
-                if (Math.abs(output) < deadzone) {
-                    return 0.0;
-                } else {
-                    return output;
-                }
+		if (Math.abs(output) < deadzone) {
+			return 0.0;
+		} else {
+			return output;
+		}
 	}
 }
