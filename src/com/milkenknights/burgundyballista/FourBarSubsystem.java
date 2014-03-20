@@ -47,12 +47,11 @@ public class FourBarSubsystem extends Subsystem {
 
 		outtakePosition = config.getAsDouble("fourBarDistanceDown");
 		goingUp = false;
-	}
-
-	public void robotInit() {
+		
 		encoder.start();
 		encoder.reset();
 		loadPosition();
+
 	}
 
 	public void pidLoop() {

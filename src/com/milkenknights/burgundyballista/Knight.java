@@ -73,9 +73,7 @@ public class Knight extends IterativeRobot {
 		// since no more subsystems will be added, we can free the remaining
 		// memory
 		subsystems.trimToSize();
-                
-		fourBarSubsystem.robotInit();
-		
+                		
 		compressor.start();
 		
 		
