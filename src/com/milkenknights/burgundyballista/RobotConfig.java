@@ -46,13 +46,13 @@ public class RobotConfig {
 		defaultConfig.put("gyrokd", "0.001");
 		defaultConfig.put("gyro", "1");
 		defaultConfig.put("fourBarDistance", "200");
-                defaultConfig.put("fourBarPIDkpUp", "0.0125");
+		defaultConfig.put("fourBarPIDkpUp", "0.0125");
 		defaultConfig.put("fourBarPIDkiUp", "0.0");
 		defaultConfig.put("fourBarPIDkdUp", "0.002");
-                defaultConfig.put("fourBarPIDkpDown", "0.009");
+		defaultConfig.put("fourBarPIDkpDown", "0.009");
 		defaultConfig.put("fourBarPIDkiDown", "0.0");
 		defaultConfig.put("fourBarPIDkdDown", "0.0001");
-                defaultConfig.put("fourBarDistanceDown", "30");
+		defaultConfig.put("fourBarDistanceDown", "30");
 	}
 
 	final public String get(Object k) {
