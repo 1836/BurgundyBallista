@@ -94,8 +94,6 @@ public class DriveSubsystem extends Subsystem {
 			}
 		}
 		
-		updateWheels();
-		
 		SmartDashboard.putBoolean("Drive gear high:", driveGear.get());
 	}
 	
@@ -143,7 +141,7 @@ public class DriveSubsystem extends Subsystem {
 	 * desired mode with setDriveMode().
 	 * This method should be called during every loop no matter what.
 	 */
-	public void updateWheels() {
+	public void update() {
 		if (driveMode == DRIVE_MODE_CHEESY) {
 			double power = xbox.getAxis(JStick.XBOX_LSY);
 			double turn = xbox.getAxis(JStick.XBOX_RSX);

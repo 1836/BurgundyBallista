@@ -183,6 +183,10 @@ public class Knight extends IterativeRobot {
 			autonomousBallShot = true;
 		}
 		*/
+		
+		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
+			((Subsystem) e.nextElement()).update();
+		}
     }
 
 	public void teleopInit() {
@@ -197,7 +201,9 @@ public class Knight extends IterativeRobot {
 
 		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
 			((Subsystem) e.nextElement()).teleopPeriodic();
+			((Subsystem) e.nextElement()).update();
 		}
+		
                 
         // Feed the Watchdog. Makes the motors not fail every 100ms
         Watchdog.getInstance().feed();

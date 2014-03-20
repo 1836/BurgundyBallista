@@ -11,7 +11,18 @@ package com.milkenknights.burgundyballista;
  * @author danielk
  */
 public abstract class Subsystem {
+	/**
+	 * This function will be run periodically during teleop
+	 */
 	public void teleopPeriodic() {
+		
+	}
+	
+	/**
+	 * This function will be run periodically during both teleop and
+	 * autonomous, and will always be run at the end of any given loop
+	 */
+	public void update() {
 		
 	}
 	
