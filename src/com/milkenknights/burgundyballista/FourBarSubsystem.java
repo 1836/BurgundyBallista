@@ -7,6 +7,7 @@ package com.milkenknights.burgundyballista;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -102,5 +103,7 @@ public class FourBarSubsystem extends Subsystem {
 			double out = fourBarPIDDown.update(encoder.getDistance());
 			tFourBar.set(out);
 		}
+		
+		SmartDashboard.putNumber("fourbar encoder", encoder.getDistance());
 	}
 }
