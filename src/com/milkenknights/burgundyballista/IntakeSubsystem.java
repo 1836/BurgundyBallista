@@ -30,7 +30,7 @@ public class IntakeSubsystem extends Subsystem {
 			tIntake.set(1);
 			if (!makeItGoOut) {
 				makeItGoOut = true;
-				fourbar.outtakePosition();
+				fourbar.setPosition(FourBarSubsystem.OUTTAKE);
 			}
 		}
 
@@ -41,7 +41,7 @@ public class IntakeSubsystem extends Subsystem {
 		if (joystick.isReleased(4) || joystick.isReleased(5)) {
 			tIntake.set(0);
 			makeItGoOut = false;
-			fourbar.loadPosition();
+			fourbar.setPosition(FourBarSubsystem.LOAD);
 		}
 
 		if (joystick.isPressed(3)) {

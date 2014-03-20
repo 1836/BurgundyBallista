@@ -37,13 +37,12 @@ public class DriveSubsystem extends Subsystem {
 	boolean runPID;
 	boolean runGyro;
 	
+	int driveMode = 0;
 	public static final int DRIVE_MODE_NONE = 0;
 	public static final int DRIVE_MODE_CHEESY = 1;
 	public static final int DRIVE_MODE_TANK = 2;
 	public static final int DRIVE_MODE_PIDSTRAIGHT = 3;
 	public static final int DRIVE_MODE_FULLSPEED = 4;
-	
-	int driveMode = 0;
 	
 	public DriveSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);

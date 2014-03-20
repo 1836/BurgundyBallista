@@ -22,7 +22,11 @@ public class FourBarSubsystem extends Subsystem {
 
 	double outtakePosition;
 
-	boolean position;
+	int position;
+	public static final int LOAD = 1;
+	public static final int SHOOT = 2;
+	public static final int OUTTAKE = 3;
+	
 	boolean goingUp;
 
 	double positionDistance;
@@ -50,65 +54,53 @@ public class FourBarSubsystem extends Subsystem {
 		
 		encoder.start();
 		encoder.reset();
-		loadPosition();
-
+		
+		setPosition(LOAD);
 	}
 
-	public void pidLoop() {
+	public void teleopPeriodic() {
+		if (joystick.isPressed(2)) {
+			if (position == SHOOT) {
+				setPosition(LOAD);
+			} else {
+				setPosition(SHOOT);
+			}
+		}
+		//System.out.println("" + encoder.getDistance());
+	}
+
+	public void autonomousInit() {
+	}
+
+	public void autonomousPeriodic(boolean pos) {
+	}
+
+	public void setPosition(int pos) {
+		position = pos;
+		if (position == LOAD) {
+			goingUp = false;
+			fourBarPIDDown.changeSetpoint(0);
+		} else if (position == SHOOT) {
+			fourBarPIDUp.changeSetpoint(positionDistance);
+			goingUp = true;
+		} else if (position == OUTTAKE) {
+			if (goingUp) {
+				goingUp = false;
+				fourBarPIDDown.changeSetpoint(outtakePosition);
+			} else {
+				goingUp = true;
+				fourBarPIDUp.changeSetpoint(outtakePosition);
+			}
+		}
+	}
+		
+	public void update() {
 		if (goingUp) {
 			double out = fourBarPIDUp.update(encoder.getDistance());
 			tFourBar.set(out);
 		} else {
 			double out = fourBarPIDDown.update(encoder.getDistance());
 			tFourBar.set(out);
-		}
-	}
-
-	public void teleopPeriodic() {
-		if (joystick.isPressed(2)) {
-			position = !position;
-			changePosition(position);
-		}
-		pidLoop();
-		//System.out.println("" + encoder.getDistance());
-	}
-
-	public void autonomousInit() {
-		outtakePosition();
-	}
-
-	public void autonomousPeriodic(boolean pos) {
-		pidLoop();
-	}
-
-	public void changePosition(boolean a) {
-		if (a) {
-			shootPosition();
-		} else {
-			loadPosition();
-		}
-
-	}
-
-	public void loadPosition() {
-		goingUp = false;
-		fourBarPIDDown.changeSetpoint(0);
-	}
-
-	public void shootPosition() {
-		fourBarPIDUp.changeSetpoint(positionDistance);
-		goingUp = true;
-
-	}
-
-	public void outtakePosition() {
-		System.out.println("OK");
-		if (goingUp) {
-			goingUp = false;
-			fourBarPIDDown.changeSetpoint(outtakePosition);
-		} else {
-			goingUp = true;
-			fourBarPIDUp.changeSetpoint(outtakePosition);
 		}
 	}
 }
