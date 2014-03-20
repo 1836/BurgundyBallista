@@ -35,7 +35,7 @@ public class Knight extends IterativeRobot {
 	IntakeSubsystem intakeSubsystem;
 	FourBarSubsystem fourBarSubsystem;
 	
-	//Vision vision;
+	Vision vision;
 	
 	boolean startSideLeft = true;
 	// this should be equal to 1,2,3,4
@@ -60,7 +60,7 @@ public class Knight extends IterativeRobot {
 		intakeSubsystem = new IntakeSubsystem(config, fourBarSubsystem);
 		casterSubsystem = new CasterSubsystem(config);
 		
-		//vision = new Vision();
+		vision = new Vision();
 		
 		subsystems = new Vector(10);
 		
@@ -91,10 +91,30 @@ public class Knight extends IterativeRobot {
 		startTime = Timer.getFPGATimestamp();
 		
 		autonMode = (int) SmartDashboard.getNumber("autonMode",1);
+		
+		if (autonMode == 1) {
+			int hotSide = vision.isHot();
+			
+			System.out.println("Hot side: "+hotSide);
+			
+			if (hotSide == -1) {
+				// stuff to do if camera malfunctions
+			} else if ((hotSide == 1) == startSideLeft) {
+				// if we are on the side of the hot goal
+				// shoot
+			} else {
+				// if we are on the opposite side of the hot goal
+				// move forward 10 feet with PID
+				driveSubsystem.setStraightPIDSetpoint(10 * 12);
+				driveSubsystem.setDriveMode(DriveSubsystem.DRIVE_MODE_PIDSTRAIGHT);
+			}
+		}
 				
+		/*
 		fourBarSubsystem.autonomousInit();
 		driveSubsystem.autonomousInit();
 		intakeSubsystem.autonomousInit();
+		*/
 		
 		/*
 		shooterSubsystem.autonomousInit();
@@ -125,6 +145,10 @@ public class Knight extends IterativeRobot {
 	public void autonomousPeriodic() {
 		double currentTime = Timer.getFPGATimestamp() - startTime;
 
+		if (autonMode == 1) {
+			
+		}
+		/*
 		fourBarSubsystem.autonomousPeriodic();
 		driveSubsystem.driveGear.set(true);
 
@@ -138,6 +162,8 @@ public class Knight extends IterativeRobot {
 		}
 		
 		driveSubsystem.updateWheels();
+		*/
+		
                 /*
 		if (currentTime > 3) {
 			intakeSubsystem.autonomousPeriodic(2);
