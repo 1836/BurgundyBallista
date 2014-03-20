@@ -12,59 +12,64 @@ public class IntakeSubsystem extends Subsystem {
 
 	FourBarSubsystem fourbar;
 
-	boolean solenoidOn;
-
-	boolean makeItGoOut;
-
+	
+	int wheelsState = 0;
+	public static final int WHEELS_STOPPED = 0;
+	public static final int WHEELS_INTAKE = 1;
+	public static final int WHEELS_OUTTAKE = 2;
+	
+	public static final boolean INTAKE_UP = false;
+	public static final boolean INTAKE_DOWN = true;
+	
+	
 	public IntakeSubsystem(RobotConfig config, FourBarSubsystem fourbar) {
 		tIntake = new Talon(config.getAsInt("tIntake"));
 		sIntake = new Solenoid(config.getAsInt("sIntakeA"));
 		joystick = JStickMultiton.getJStick(2);
 		this.fourbar = fourbar;
-		makeItGoOut = false;
 	}
 
 	public void teleopPeriodic() {
 		if (joystick.isPressed(5)) {
 			// Outtake
-			tIntake.set(1);
-			if (!makeItGoOut) {
-				makeItGoOut = true;
-				fourbar.setPosition(FourBarSubsystem.OUTTAKE);
-			}
+			setWheelsState(WHEELS_OUTTAKE);
+			fourbar.setPosition(FourBarSubsystem.OUTTAKE);
 		}
 
 		if (joystick.isPressed(4)) {
-			tIntake.set(-1);
+			setWheelsState(WHEELS_INTAKE);
 		}
 
 		if (joystick.isReleased(4) || joystick.isReleased(5)) {
-			tIntake.set(0);
-			makeItGoOut = false;
+			setWheelsState(WHEELS_STOPPED);
 			fourbar.setPosition(FourBarSubsystem.LOAD);
 		}
 
 		if (joystick.isPressed(3)) {
-			sIntake.set(!solenoidOn);
-			solenoidOn = !solenoidOn;
+			toggleIntakePosition();
 		}
 
 		SmartDashboard.putBoolean("Intake up", !sIntake.get());
 
 	}
-
-	public void autonomousInit() {
-		sIntake.set(false);
-	}
-
-	public void autonomousPeriodic(int step) {
-		if (step == 1) {
-			tIntake.set(1);
-
-		} else if (step == 2) {
+	
+	public void setWheelsState(int s) {
+		if (s == WHEELS_STOPPED) {
 			tIntake.set(0);
-			sIntake.set(true);
+		} else if (s == WHEELS_INTAKE) {
+			tIntake.set(-1);
+		} else if (s == WHEELS_OUTTAKE) {
+			tIntake.set(1);
 		}
+		
+	}
+	
+	public void setIntakePosition(boolean p) {
+		sIntake.set(p);
+	}
+	
+	public void toggleIntakePosition() {
+		sIntake.set(!sIntake.get());
 	}
 
 }

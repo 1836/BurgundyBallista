@@ -77,14 +77,13 @@ public class FourBarSubsystem extends Subsystem {
 	}
 
 	public void setPosition(int pos) {
-		position = pos;
-		if (position == LOAD) {
+		if (pos == LOAD) {
 			goingUp = false;
 			fourBarPIDDown.changeSetpoint(0);
-		} else if (position == SHOOT) {
+		} else if (pos == SHOOT) {
 			fourBarPIDUp.changeSetpoint(positionDistance);
 			goingUp = true;
-		} else if (position == OUTTAKE) {
+		} else if (pos == OUTTAKE && position != OUTTAKE) {
 			if (goingUp) {
 				goingUp = false;
 				fourBarPIDDown.changeSetpoint(outtakePosition);
@@ -93,6 +92,8 @@ public class FourBarSubsystem extends Subsystem {
 				fourBarPIDUp.changeSetpoint(outtakePosition);
 			}
 		}
+		
+		position = pos;
 	}
 		
 	public void update() {
