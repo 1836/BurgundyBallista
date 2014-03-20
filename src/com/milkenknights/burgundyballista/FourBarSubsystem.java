@@ -58,6 +58,10 @@ public class FourBarSubsystem extends Subsystem {
 		
 		setPosition(LOAD);
 	}
+	
+	public void teleopInit() {
+		setPosition(LOAD);
+	}
 
 	public void teleopPeriodic() {
 		if (joystick.isPressed(2)) {

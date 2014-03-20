@@ -8,9 +8,16 @@ package com.milkenknights.burgundyballista;
 
 /**
  *
- * @author danielk
+ * @author Daniel
  */
 public abstract class Subsystem {
+	/**
+	 * This function will be run during teleopInit()
+	 */
+	public void teleopInit() {
+		
+	}
+	
 	/**
 	 * This function will be run periodically during teleop
 	 */
@@ -23,14 +30,6 @@ public abstract class Subsystem {
 	 * autonomous, and will always be run at the end of any given loop
 	 */
 	public void update() {
-		
-	}
-	
-	public void autonomousPeriodic() {
-		
-	}
-	
-	public void autonomousInit() {
 		
 	}
 }

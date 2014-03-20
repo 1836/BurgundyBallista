@@ -27,6 +27,11 @@ public class IntakeSubsystem extends Subsystem {
 		joystick = JStickMultiton.getJStick(2);
 		this.fourbar = fourbar;
 	}
+	
+	public void teleopInit() {
+		setWheelsState(WHEELS_STOPPED);
+		setIntakePosition(INTAKE_DOWN);
+	}
 
 	public void teleopPeriodic() {
 		if (joystick.isPressed(5)) {

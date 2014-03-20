@@ -223,7 +223,9 @@ public class Knight extends IterativeRobot {
     }
 
 	public void teleopInit() {
-		driveSubsystem.setDriveMode(DriveSubsystem.CHEESY);
+		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
+			((Subsystem) e.nextElement()).teleopInit();
+		}
 	}
 	
     /**

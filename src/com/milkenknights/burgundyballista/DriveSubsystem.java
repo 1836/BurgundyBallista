@@ -77,6 +77,10 @@ public class DriveSubsystem extends Subsystem {
 		gyro.reset();
 	}
 	
+	public void teleopInit() {
+		setDriveMode(CHEESY);
+	}
+	
 	public void teleopPeriodic() {
 		if (xbox.isReleased(JStick.XBOX_LB)) {
 			driveGear.toggle();
