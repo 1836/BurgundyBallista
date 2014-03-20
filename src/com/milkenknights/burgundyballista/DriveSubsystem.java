@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- *
+ * The subsystem that manages the robot's wheels and gear solenoids.
+ * 
+ * @author Daniel
  * @author Jake
  */
 public class DriveSubsystem extends Subsystem {
@@ -35,6 +37,13 @@ public class DriveSubsystem extends Subsystem {
 	boolean runPID;
 	boolean runGyro;
 	
+	public static final int DRIVE_MODE_NONE = 0;
+	public static final int DRIVE_MODE_CHEESY = 1;
+	public static final int DRIVE_MODE_TANK = 2;
+	public static final int DRIVE_MODE_PIDSTRAIGHT = 3;
+	public static final int DRIVE_MODE_FULLSPEED = 4;
+	
+	int driveMode = 0;
 	
 	public DriveSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
@@ -85,18 +94,8 @@ public class DriveSubsystem extends Subsystem {
 			}
 		}
 		
-		double power = xbox.getAxis(JStick.XBOX_LSY);
-		double turn = xbox.getAxis(JStick.XBOX_RSX);
-		boolean trigDown = Math.abs(xbox.getAxis(JStick.XBOX_TRIG)) > 0.5;
-
-		if (slowMode) {
-			power = power * .5;
-		}
-		SmartDashboard.putDouble("LSY", xbox.getAxis(JStick.XBOX_LSY));
-                SmartDashboard.putDouble("RSX", xbox.getAxis(JStick.XBOX_RSX));
-                drive.cheesyDrive(power, -turn, trigDown);
-
-                                
+		updateWheels();
+		
 		SmartDashboard.putBoolean("Drive gear high:", driveGear.get());
 	}
 	
@@ -129,16 +128,54 @@ public class DriveSubsystem extends Subsystem {
 		}
 		
 	}
-        
-        public void drive(boolean a) {
-            if (a) {
-                driveGear.set(false);
-                drive.tankDrive(1,1);
-                        }
-            else {
-                drive.tankDrive(0,0);
-                driveGear.set(true);
-            }
-        }
 	
+	public void setStraightPIDSetpoint(double setpoint) {
+		leftPID.changeSetpoint(setpoint);
+		rightPID.changeSetpoint(setpoint);
+	}
+	
+	public void setDriveMode(int mode) {
+		driveMode = mode;
+	}
+	
+	/**
+	 * Updates wheels depending on driveMode (which should be set to the
+	 * desired mode with setDriveMode().
+	 * This method should be called during every loop no matter what.
+	 */
+	public void updateWheels() {
+		if (driveMode == DRIVE_MODE_CHEESY) {
+			double power = xbox.getAxis(JStick.XBOX_LSY);
+			double turn = xbox.getAxis(JStick.XBOX_RSX);
+			boolean trigDown
+					= Math.abs(xbox.getAxis(JStick.XBOX_TRIG)) > 0.5;
+
+			if (slowMode) {
+				power = power * .5;
+			}
+
+			drive.cheesyDrive(power, -turn, trigDown);
+			
+		} else if (driveMode == DRIVE_MODE_TANK) {
+			double left = xbox.getAxis(JStick.XBOX_LSY);
+			double right = xbox.getAxis(JStick.XBOX_RSY);
+			
+			if (slowMode) {
+				left = left * .5;
+				right = right * .5;
+			}
+			
+			drive.tankDrive(left, right);
+			
+		} else if (driveMode == DRIVE_MODE_PIDSTRAIGHT) {
+			drive.tankDrive(leftPID.update(leftDriveEncoder.getDistance()),
+					rightPID.update(rightDriveEncoder.getDistance()));
+			
+		} else if (driveMode == DRIVE_MODE_FULLSPEED) {
+			drive.tankDrive(1,1);
+			
+		} else {
+			drive.tankDrive(0,0);
+		}
+	}	
 }

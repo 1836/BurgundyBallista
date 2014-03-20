@@ -38,10 +38,13 @@ public class Knight extends IterativeRobot {
 	//Vision vision;
 	
 	boolean startSideLeft = true;
+	// this should be equal to 1,2,3,4
+	int autonMode = 1;
 	
 	double startTime;
 	boolean shootFirst;
 	boolean autonomousBallShot;
+	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -75,18 +78,24 @@ public class Knight extends IterativeRobot {
 		
 		compressor.start();
 		
-		SmartDashboard.getBoolean("Starting on left side?", startSideLeft);
+		
     }
 
     /**
      * This function is called periodically during autonomous
      */
 	public void autonomousInit() {
+		startSideLeft
+				= SmartDashboard.getBoolean("Starting on left side?", false);
+
 		startTime = Timer.getFPGATimestamp();
 		
+		autonMode = (int) SmartDashboard.getNumber("autonMode",1);
+				
 		fourBarSubsystem.autonomousInit();
 		driveSubsystem.autonomousInit();
 		intakeSubsystem.autonomousInit();
+		
 		/*
 		shooterSubsystem.autonomousInit();
 
@@ -121,12 +130,14 @@ public class Knight extends IterativeRobot {
 
 		//driveSubsystem.autonomousPeriodic(false);
 		if (currentTime <= 5) {
-			driveSubsystem.drive(true);
+			driveSubsystem.setDriveMode(DriveSubsystem.DRIVE_MODE_FULLSPEED);
 		} else if (alreadyShot == false) {
 			alreadyShot = true;
-			driveSubsystem.drive(false);
+			driveSubsystem.setDriveMode(DriveSubsystem.DRIVE_MODE_NONE);
 			intakeSubsystem.autonomousPeriodic(1);
 		}
+		
+		driveSubsystem.updateWheels();
                 /*
 		if (currentTime > 3) {
 			intakeSubsystem.autonomousPeriodic(2);
@@ -150,6 +161,10 @@ public class Knight extends IterativeRobot {
 		*/
     }
 
+	public void teleopInit() {
+		driveSubsystem.setDriveMode(DriveSubsystem.DRIVE_MODE_CHEESY);
+	}
+	
     /**
      * This function is called periodically during operator control
      */
