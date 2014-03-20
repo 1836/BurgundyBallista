@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 
 
 public class ShooterSubsystem extends Subsystem {
@@ -13,80 +14,74 @@ public class ShooterSubsystem extends Subsystem {
 	JStick joystick;
 	Solenoid sWinch;
 	//PIDSystem PID;
-
-	boolean loaded;
+	
+	int state = 0;
+	public static final int WINCH_INITIAL = 0;
+	public static final int WINCH_PULLING = 1;
+	public static final int WINCH_PULLED = 2;
+	public static final int WINCH_SHOOTING = 3;
+	
+	// when we shoot, we should wait a certain duration before being certain
+	// that we have gone back into the initial state.
+	double lastShootTime;
+	static final double SHOOT_DELAY = 0.5;
         
 	DigitalInput limitswitch;
-	
-	// Tells the auton or teleop periodic whether to run the PID update function
-	boolean runPID;
-
-	double pullBack;
 	
 	//Encoder shooterEncoder;
 
 	public ShooterSubsystem(RobotConfig config) {
-		pullBack = config.getAsDouble("winchPullBack");
-		
 		tWinch = new Talon(config.getAsInt("tWinch"));
 		joystick = JStickMultiton.getJStick(2);
 		sWinch = new Solenoid(config.getAsInt("sWinch"));
-		//PID = new PIDSystem(pullBack, config.getAsDouble("shooterPIDkp"),
-				//config.getAsDouble("shooterPIDki"),
-				//config.getAsDouble("shooterPIDkd"), .001);
-		runPID = false;
-		//shooterEncoder = new Encoder(config.getAsInt("winchEncA"),
-			  // config.getAsInt("winchEncB"), true, EncodingType.k4X);
-		
-		//shooterEncoder.reset();
-
+	}
+	
+	public int getState() {
+		return state;
 	}
 
 	public void teleopPeriodic() {
-		if (joystick.isPressed(1)) {
+		if (joystick.isPressed(1) && state == WINCH_PULLED) {
 			shoot();
-			load();
 		}
-
-		if (!limitswitch.get()) {
-			runPID = false;
-			tWinch.set(0);
-		}
-
-		if (runPID) {
-			tWinch.set(1);
-		}
-
-	}
-
-	public void autonomousInit() {
-		load();
-	}
-
-	public void autonomousPeriodic() {
-		shoot();
-		load();
-		if (runPID) {
-			tWinch.set(1);
+		
+		if (joystick.isReleased(2)) {
+			pullBack();
 		}
 	}
 	
-	public void load() {
-		if (!loaded) {
-			runPID = true;
-			sWinch.set(true);
-			loaded = true;
-		}
+	public void pullBack() {
+		state = WINCH_PULLING;
 	}
 	
+	/**
+	 * This method will disengage the winch solenoid. This can be called at any
+	 * time, but should only be called if the winch is fully pulled back.
+	 * shooterSubsystem.getState() should be equal to WINCH_PULLED.
+	 */
 	public void shoot() {
-		if (loaded) {
-			sWinch.set(false);
-			runPID = false;
-			loaded = false;
+		if (state != WINCH_PULLED) {
+			System.out.println("Warning! The robot is shooting before the"
+					+ "winch has been pulled back.");
+		}
+		
+		state = WINCH_SHOOTING;
+		sWinch.set(false);
+		lastShootTime = Timer.getFPGATimestamp();
+	}
+		
+	public void update() {
+		if (state == WINCH_PULLING) {
+			if (!limitswitch.get()) {
+				state = WINCH_PULLED;
+				tWinch.set(0);
+			} else {
+				tWinch.set(1);
+			}
+		} else if (state == WINCH_SHOOTING &&
+				(Timer.getFPGATimestamp() - lastShootTime) > SHOOT_DELAY) {
+			state = WINCH_INITIAL;
+			sWinch.set(true);
 		}
 	}
-
-
-
 }

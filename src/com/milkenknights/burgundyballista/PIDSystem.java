@@ -14,6 +14,8 @@ public class PIDSystem {
 
 	private double sumOfError;
 	private double lastError;
+	
+	private double error;
 
 	public PIDSystem(double setpoint, double kp, double ki, double kd, double deadzone) {
 		this.setpoint = setpoint;
@@ -54,12 +56,21 @@ public class PIDSystem {
 	}
 
 	public double update(double position) {
-		double error = setpoint - position;
+		error = setpoint - position;
 		double output = PFunction(error) + IFunction(error) + DFunction(error);
 		if (Math.abs(output) < deadzone) {
 			return 0.0;
 		} else {
 			return output;
 		}
+	}
+	
+	/**
+	 * Returns true if the PID error is within threshold.
+	 * @param threshold
+	 * @return true if the PID error is within the threshold.
+	 */
+	public boolean onTarget(double threshold) {
+		return Math.abs(error) <= threshold;
 	}
 }

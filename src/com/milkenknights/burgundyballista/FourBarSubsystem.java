@@ -70,12 +70,6 @@ public class FourBarSubsystem extends Subsystem {
 		//System.out.println("" + encoder.getDistance());
 	}
 
-	public void autonomousInit() {
-	}
-
-	public void autonomousPeriodic(boolean pos) {
-	}
-
 	public void setPosition(int pos) {
 		if (pos == LOAD) {
 			goingUp = false;

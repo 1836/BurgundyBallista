@@ -75,10 +75,10 @@ public class Knight extends IterativeRobot {
 		subsystems.trimToSize();
                 		
 		compressor.start();
-		
-		
     }
 
+	boolean alreadyShot;
+	
     /**
      * This function is called periodically during autonomous
      */
@@ -91,20 +91,24 @@ public class Knight extends IterativeRobot {
 		autonMode = (int) SmartDashboard.getNumber("autonMode",1);
 		
 		if (autonMode == 1) {
+			// Auton mode 1: simply move 10 feet forward
+			driveSubsystem.setStraightPIDSetpoint(10 * 12);
+			driveSubsystem.setDriveMode(DriveSubsystem.PIDSTRAIGHT);
+		} else if (autonMode == 2) {
+			alreadyShot = false;
+			
 			int hotSide = vision.isHot();
 			
-			System.out.println("Hot side: "+hotSide);
-			
+			// Auton mode 2: Two ball auton
 			if (hotSide == -1) {
 				// stuff to do if camera malfunctions
 			} else if ((hotSide == 1) == startSideLeft) {
-				// if we are on the side of the hot goal
-				// shoot
+				// if we are on the side of the hot goal, start the autonomous
+				// procedure immediately
 			} else {
-				// if we are on the opposite side of the hot goal
-				// move forward 10 feet with PID
-				driveSubsystem.setStraightPIDSetpoint(10 * 12);
-				driveSubsystem.setDriveMode(DriveSubsystem.DRIVE_MODE_PIDSTRAIGHT);
+				// if we are on the opposite side of the hot goal, wait 5
+				// seconds before starting the autonomous procedure
+				startTime -= 5;
 			}
 		}
 				
@@ -139,12 +143,41 @@ public class Knight extends IterativeRobot {
 		
 	}
 	
-	boolean alreadyShot;
 	public void autonomousPeriodic() {
 		double currentTime = Timer.getFPGATimestamp() - startTime;
 
+		// emergency auton-- move 10 feet forward
 		if (autonMode == 1) {
-			
+		} else if (autonMode == 2) {
+			if (currentTime > 0) {
+				// two ball auton
+				intakeSubsystem.setIntakePosition(IntakeSubsystem.INTAKE_DOWN);
+				fourBarSubsystem.setPosition(FourBarSubsystem.SHOOT);
+				shooterSubsystem.pullBack();
+				if (shooterSubsystem.getState() == ShooterSubsystem.WINCH_PULLED
+						&& !alreadyShot) {
+					shooterSubsystem.shoot();
+					shooterSubsystem.pullBack();
+				} else if (shooterSubsystem.getState() ==
+						ShooterSubsystem.WINCH_INITIAL || alreadyShot) {
+					shooterSubsystem.pullBack();
+					alreadyShot = true;
+					driveSubsystem.setStraightPIDSetpoint(-3);
+					driveSubsystem.setDriveMode(DriveSubsystem.PIDSTRAIGHT);
+					intakeSubsystem.setWheelsState(IntakeSubsystem.WHEELS_INTAKE);
+					fourBarSubsystem.setPosition(FourBarSubsystem.LOAD);
+					if (driveSubsystem.pidOnTarget(.6)) {
+						fourBarSubsystem.setPosition(FourBarSubsystem.SHOOT);
+						if (shooterSubsystem.getState() ==
+								ShooterSubsystem.WINCH_PULLED) {
+							shooterSubsystem.shoot();
+						} else if (shooterSubsystem.getState() ==
+								ShooterSubsystem.WINCH_INITIAL) {
+							driveSubsystem.setStraightPIDSetpoint(10);
+						}
+					}
+				}
+			}
 		}
 		/*
 		fourBarSubsystem.autonomousPeriodic();
@@ -190,7 +223,7 @@ public class Knight extends IterativeRobot {
     }
 
 	public void teleopInit() {
-		driveSubsystem.setDriveMode(DriveSubsystem.DRIVE_MODE_CHEESY);
+		driveSubsystem.setDriveMode(DriveSubsystem.CHEESY);
 	}
 	
     /**

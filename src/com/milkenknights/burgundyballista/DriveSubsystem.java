@@ -38,11 +38,11 @@ public class DriveSubsystem extends Subsystem {
 	boolean runGyro;
 	
 	int driveMode = 0;
-	public static final int DRIVE_MODE_NONE = 0;
-	public static final int DRIVE_MODE_CHEESY = 1;
-	public static final int DRIVE_MODE_TANK = 2;
-	public static final int DRIVE_MODE_PIDSTRAIGHT = 3;
-	public static final int DRIVE_MODE_FULLSPEED = 4;
+	public static final int NONE = 0;
+	public static final int CHEESY = 1;
+	public static final int TANK = 2;
+	public static final int PIDSTRAIGHT = 3;
+	public static final int FULLSPEED = 4;
 	
 	public DriveSubsystem(RobotConfig config) {
 		xbox = JStickMultiton.getJStick(1);
@@ -135,13 +135,17 @@ public class DriveSubsystem extends Subsystem {
 		driveMode = mode;
 	}
 	
+	public boolean pidOnTarget(double threshold) {
+		return leftPID.onTarget(threshold) && rightPID.onTarget(threshold);
+	}
+	
 	/**
 	 * Updates wheels depending on driveMode (which should be set to the
 	 * desired mode with setDriveMode().
 	 * This method should be called during every loop no matter what.
 	 */
 	public void update() {
-		if (driveMode == DRIVE_MODE_CHEESY) {
+		if (driveMode == CHEESY) {
 			double power = xbox.getAxis(JStick.XBOX_LSY);
 			double turn = xbox.getAxis(JStick.XBOX_RSX);
 			boolean trigDown
@@ -153,7 +157,7 @@ public class DriveSubsystem extends Subsystem {
 
 			drive.cheesyDrive(power, -turn, trigDown);
 			
-		} else if (driveMode == DRIVE_MODE_TANK) {
+		} else if (driveMode == TANK) {
 			double left = xbox.getAxis(JStick.XBOX_LSY);
 			double right = xbox.getAxis(JStick.XBOX_RSY);
 			
@@ -164,11 +168,11 @@ public class DriveSubsystem extends Subsystem {
 			
 			drive.tankDrive(left, right);
 			
-		} else if (driveMode == DRIVE_MODE_PIDSTRAIGHT) {
+		} else if (driveMode == PIDSTRAIGHT) {
 			drive.tankDrive(leftPID.update(leftDriveEncoder.getDistance()),
 					rightPID.update(rightDriveEncoder.getDistance()));
 			
-		} else if (driveMode == DRIVE_MODE_FULLSPEED) {
+		} else if (driveMode == FULLSPEED) {
 			drive.tankDrive(1,1);
 			
 		} else {

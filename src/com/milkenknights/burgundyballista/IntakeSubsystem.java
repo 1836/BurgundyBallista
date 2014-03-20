@@ -11,7 +11,6 @@ public class IntakeSubsystem extends Subsystem {
 	JStick joystick;
 
 	FourBarSubsystem fourbar;
-
 	
 	int wheelsState = 0;
 	public static final int WHEELS_STOPPED = 0;
