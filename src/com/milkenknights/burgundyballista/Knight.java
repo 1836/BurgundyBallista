@@ -88,6 +88,20 @@ public class Knight extends IterativeRobot {
 
 		startTime = Timer.getFPGATimestamp();
 		
+		int hotSide = vision.isHot();
+		System.out.println("HOTSIDE RETURNED "+hotSide);
+
+		if (hotSide == -1) {
+			// stuff to do if camera malfunctions
+		} else if ((hotSide == 1) == startSideLeft) {
+			// if we are on the side of the hot goal, start the autonomous
+			// procedure immediately
+		} else {
+			// if we are on the opposite side of the hot goal, wait 5
+			// seconds before starting the autonomous procedure
+			startTime -= 5;
+		}
+		
 		autonMode = (int) SmartDashboard.getNumber("autonMode",1);
 		
 		if (autonMode == 1) {
@@ -95,52 +109,15 @@ public class Knight extends IterativeRobot {
 			driveSubsystem.setStraightPIDSetpoint(10 * 12);
 			driveSubsystem.setDriveMode(DriveSubsystem.PIDSTRAIGHT);
 		} else if (autonMode == 2) {
-			alreadyShot = false;
-			
-			int hotSide = vision.isHot();
-			
 			// Auton mode 2: Two ball auton
-			if (hotSide == -1) {
-				// stuff to do if camera malfunctions
-			} else if ((hotSide == 1) == startSideLeft) {
-				// if we are on the side of the hot goal, start the autonomous
-				// procedure immediately
-			} else {
-				// if we are on the opposite side of the hot goal, wait 5
-				// seconds before starting the autonomous procedure
-				startTime -= 5;
-			}
+			alreadyShot = false;
+			// two ball auton
+			intakeSubsystem.setIntakePosition(IntakeSubsystem.INTAKE_DOWN);
+			fourBarSubsystem.setPosition(FourBarSubsystem.SHOOT);
+			shooterSubsystem.pullBack();
+		} else if (autonMode == 3) {
+			shooterSubsystem.pullBack();
 		}
-				
-		/*
-		fourBarSubsystem.autonomousInit();
-		driveSubsystem.autonomousInit();
-		intakeSubsystem.autonomousInit();
-		*/
-		
-		/*
-		shooterSubsystem.autonomousInit();
-
-		int startSide;
-		int hotSide;
-		
-		hotSide = 1; //vision.isHot();
-		if (startSideLeft) {
-			startSide = 1;
-		}
-		else {
-			startSide = 2;
-		}
-		if (hotSide == 0 || hotSide == -1) {
-			//Error or can't detect hot side
-		}
-		if (hotSide == startSide) {
-			shootFirst = true;
-		}
-		else {
-			shootFirst = false;
-		}*/
-		
 	}
 	
 	public void autonomousPeriodic() {
@@ -149,23 +126,22 @@ public class Knight extends IterativeRobot {
 		// emergency auton-- move 10 feet forward
 		if (autonMode == 1) {
 		} else if (autonMode == 2) {
-			if (currentTime > 0) {
-				// two ball auton
-				intakeSubsystem.setIntakePosition(IntakeSubsystem.INTAKE_DOWN);
-				fourBarSubsystem.setPosition(FourBarSubsystem.SHOOT);
-				shooterSubsystem.pullBack();
+			if (currentTime > 0) {				
 				if (shooterSubsystem.getState() == ShooterSubsystem.WINCH_PULLED
 						&& !alreadyShot) {
 					shooterSubsystem.shoot();
 					shooterSubsystem.pullBack();
+					
 				} else if (shooterSubsystem.getState() ==
 						ShooterSubsystem.WINCH_INITIAL || alreadyShot) {
 					shooterSubsystem.pullBack();
 					alreadyShot = true;
 					driveSubsystem.setStraightPIDSetpoint(-3);
 					driveSubsystem.setDriveMode(DriveSubsystem.PIDSTRAIGHT);
+					
 					intakeSubsystem.setWheelsState(IntakeSubsystem.WHEELS_INTAKE);
 					fourBarSubsystem.setPosition(FourBarSubsystem.LOAD);
+					
 					if (driveSubsystem.pidOnTarget(.6)) {
 						fourBarSubsystem.setPosition(FourBarSubsystem.SHOOT);
 						if (shooterSubsystem.getState() ==
@@ -173,49 +149,26 @@ public class Knight extends IterativeRobot {
 							shooterSubsystem.shoot();
 						} else if (shooterSubsystem.getState() ==
 								ShooterSubsystem.WINCH_INITIAL) {
-							driveSubsystem.setStraightPIDSetpoint(10);
+							driveSubsystem.setStraightPIDSetpoint(10 * 12);
 						}
 					}
 				}
 			}
+		} else if (autonMode == 3) {
+			// one ball auton high
+			if (currentTime > 0) {
+				if (shooterSubsystem.getState() ==
+						ShooterSubsystem.WINCH_PULLED) {
+					shooterSubsystem.shoot();
+				} else if (shooterSubsystem.getState() ==
+						ShooterSubsystem.WINCH_INITIAL) {
+					// this means the shooter has finished shooting, so we
+					// should start moving forward
+					driveSubsystem.setStraightPIDSetpoint(10 * 12);
+					driveSubsystem.setDriveMode(DriveSubsystem.PIDSTRAIGHT);
+				}
+			}
 		}
-		/*
-		fourBarSubsystem.autonomousPeriodic();
-		driveSubsystem.driveGear.set(true);
-
-		//driveSubsystem.autonomousPeriodic(false);
-		if (currentTime <= 5) {
-			driveSubsystem.setDriveMode(DriveSubsystem.DRIVE_MODE_FULLSPEED);
-		} else if (alreadyShot == false) {
-			alreadyShot = true;
-			driveSubsystem.setDriveMode(DriveSubsystem.DRIVE_MODE_NONE);
-			intakeSubsystem.autonomousPeriodic(1);
-		}
-		
-		driveSubsystem.updateWheels();
-		*/
-		
-                /*
-		if (currentTime > 3) {
-			intakeSubsystem.autonomousPeriodic(2);
-		}
-		
-		
-		if (currentTime <= 5 && shootFirst && autonomousBallShot == false) {
-			shooterSubsystem.autonomousPeriodic();
-			autonomousBallShot = true;
-		}
-		else if (currentTime > 5 && shootFirst) {
-			driveSubsystem.autonomousPeriodic();
-		}
-		if (currentTime <= 5 && shootFirst == false) {
-			driveSubsystem.autonomousPeriodic();
-		}
-		else if (currentTime > 5 && shootFirst == false && autonomousBallShot == false) {
-			shooterSubsystem.autonomousPeriodic();
-			autonomousBallShot = true;
-		}
-		*/
 		
 		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
 			((Subsystem) e.nextElement()).update();
