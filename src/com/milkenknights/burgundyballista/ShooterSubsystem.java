@@ -41,12 +41,12 @@ public class ShooterSubsystem extends Subsystem {
 	}
 
 	public void teleopPeriodic() {
+		// in teleop, the winch should always be pulled back
+		if (getState() == WINCH_INITIAL) {
+			pullBack();
+		}
 		if (joystick.isPressed(1) && state == WINCH_PULLED) {
 			shoot();
-		}
-		
-		if (joystick.isReleased(2)) {
-			pullBack();
 		}
 	}
 	
