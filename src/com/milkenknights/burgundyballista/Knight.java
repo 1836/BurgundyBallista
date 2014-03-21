@@ -91,7 +91,7 @@ public class Knight extends IterativeRobot {
 		int hotSide = vision.isHot();
 		System.out.println("HOTSIDE RETURNED "+hotSide);
 
-		if (hotSide == -1) {
+		if (hotSide == -1 || hotSide == 0) {
 			// stuff to do if camera malfunctions
 		} else if ((hotSide == 1) == startSideLeft) {
 			// if we are on the side of the hot goal, start the autonomous
@@ -99,7 +99,7 @@ public class Knight extends IterativeRobot {
 		} else {
 			// if we are on the opposite side of the hot goal, wait 5
 			// seconds before starting the autonomous procedure
-			startTime -= 5;
+			startTime += 5;
 		}
 		
 		autonMode = (int) SmartDashboard.getNumber("autonMode",1);
@@ -117,14 +117,18 @@ public class Knight extends IterativeRobot {
 			shooterSubsystem.pullBack();
 		} else if (autonMode == 3) {
 			shooterSubsystem.pullBack();
+		} else if (autonMode == 4) {
+			// Auton mode 4: One ball auton without encoders
+			driveSubsystem.setDriveMode(DriveSubsystem.FULLSPEED);
 		}
 	}
 	
 	public void autonomousPeriodic() {
 		double currentTime = Timer.getFPGATimestamp() - startTime;
 
-		// emergency auton-- move 10 feet forward
+		
 		if (autonMode == 1) {
+			// emergency auton-- move 10 feet forward
 		} else if (autonMode == 2) {
 			if (currentTime > 0) {				
 				if (shooterSubsystem.getState() == ShooterSubsystem.WINCH_PULLED
@@ -154,6 +158,7 @@ public class Knight extends IterativeRobot {
 					}
 				}
 			}
+			
 		} else if (autonMode == 3) {
 			// one ball auton high
 			if (currentTime > 0) {
@@ -168,8 +173,17 @@ public class Knight extends IterativeRobot {
 					driveSubsystem.setDriveMode(DriveSubsystem.PIDSTRAIGHT);
 				}
 			}
+			
+		} else if (autonMode == 4) {
+			// one ball auton low without encoders
+			if (currentTime > 6) {
+				intakeSubsystem.setWheelsState(IntakeSubsystem.WHEELS_STOPPED);
+			} else if (currentTime > 3) {
+				driveSubsystem.setDriveMode(DriveSubsystem.NONE);
+				intakeSubsystem.setIntakePosition(IntakeSubsystem.INTAKE_DOWN);
+				intakeSubsystem.setWheelsState(IntakeSubsystem.WHEELS_OUTTAKE);
+			}
 		}
-		
 		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
 			((Subsystem) e.nextElement()).update();
 		}

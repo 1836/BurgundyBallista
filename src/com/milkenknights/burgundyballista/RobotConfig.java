@@ -53,6 +53,7 @@ public class RobotConfig {
 		defaultConfig.put("fourBarPIDkiDown", "0.0");
 		defaultConfig.put("fourBarPIDkdDown", "0.0001");
 		defaultConfig.put("fourBarDistanceDown", "30");
+		defaultConfig.put("lsShooter", "14");
 	}
 
 	final public String get(Object k) {

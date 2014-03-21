@@ -20,6 +20,7 @@ public class ShooterSubsystem extends Subsystem {
 	public static final int WINCH_PULLING = 1;
 	public static final int WINCH_PULLED = 2;
 	public static final int WINCH_SHOOTING = 3;
+	public static final int WINCH_STOPPED = 4;
 	
 	// when we shoot, we should wait a certain duration before being certain
 	// that we have gone back into the initial state.
@@ -34,6 +35,7 @@ public class ShooterSubsystem extends Subsystem {
 		tWinch = new Talon(config.getAsInt("tWinch"));
 		joystick = JStickMultiton.getJStick(2);
 		sWinch = new Solenoid(config.getAsInt("sWinch"));
+		limitswitch = new DigitalInput(config.getAsInt("lsShooter"));
 	}
 	
 	public int getState() {
@@ -41,12 +43,12 @@ public class ShooterSubsystem extends Subsystem {
 	}
 
 	public void teleopPeriodic() {
+		// in teleop, the winch should always be pulled back
+		if (getState() == WINCH_INITIAL) {
+			pullBack();
+		}
 		if (joystick.isPressed(1) && state == WINCH_PULLED) {
 			shoot();
-		}
-		
-		if (joystick.isReleased(2)) {
-			pullBack();
 		}
 	}
 	
@@ -65,11 +67,19 @@ public class ShooterSubsystem extends Subsystem {
 					+ "winch has been pulled back.");
 		}
 		
+		if (joystick.isReleased(8)) {
+			stopWinch();
+		}
+		
 		state = WINCH_SHOOTING;
 		sWinch.set(false);
 		lastShootTime = Timer.getFPGATimestamp();
 	}
-		
+	
+	public void stopWinch() {
+		state = WINCH_STOPPED;
+	}
+	
 	public void update() {
 		if (state == WINCH_PULLING) {
 			if (!limitswitch.get()) {
@@ -82,6 +92,8 @@ public class ShooterSubsystem extends Subsystem {
 				(Timer.getFPGATimestamp() - lastShootTime) > SHOOT_DELAY) {
 			state = WINCH_INITIAL;
 			sWinch.set(true);
+		} else if (state == WINCH_STOPPED) {
+			tWinch.set(0);
 		}
 	}
 }

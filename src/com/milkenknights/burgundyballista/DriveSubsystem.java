@@ -89,10 +89,6 @@ public class DriveSubsystem extends Subsystem {
 			normalDriveGear = driveGear.get();
 		}
 		
-		if (xbox.isReleased(JStick.XBOX_X)) {
-			reverseMode =! reverseMode;
-		}
-		
 		if (xbox.isReleased(JStick.XBOX_Y)) {
 			slowMode =! slowMode;
 			
@@ -103,39 +99,13 @@ public class DriveSubsystem extends Subsystem {
 			}
 		}
 		
+		if (xbox.isReleased(JStick.XBOX_X)) {
+			reverseMode = !reverseMode;
+		}
+		
 		SmartDashboard.putBoolean("Drive gear high:", driveGear.get());
 	}
-	
-	public void autonomousInit() {
-		gyro.reset();
-	}
-	
-	public void autonomousPeriodic(boolean rungyro) {
-		if (rungyro) {
-			runGyro = true;
-		}
-		else {
-			runPID = true;
-		}
 		
-		if (runGyro) {
-			drive.tankDrive(gyroPID.update(gyro.getAngle()), 
-					-gyroPID.update(gyro.getAngle()));
-			if (gyroPID.update(gyro.getAngle()) == 0) {
-				runGyro = false;
-			}
-		}
-		else if (runPID) {
-			drive.tankDrive(leftPID.update(leftDriveEncoder.getDistance()), 
-					rightPID.update(rightDriveEncoder.getDistance()));
-			if (leftPID.update(leftDriveEncoder.getDistance()) == 0 &&
-					rightPID.update(rightDriveEncoder.getDistance()) == 0) {
-				runPID = false;
-			}
-		}
-		
-	}
-	
 	public void setStraightPIDSetpoint(double setpoint) {
 		leftPID.changeSetpoint(setpoint);
 		rightPID.changeSetpoint(setpoint);
@@ -160,7 +130,7 @@ public class DriveSubsystem extends Subsystem {
 			double turn = xbox.getAxis(JStick.XBOX_RSX);
 			boolean trigDown
 					= Math.abs(xbox.getAxis(JStick.XBOX_TRIG)) > 0.5;
-
+			
 			if (reverseMode) {
 				power = -power;
 				turn = -turn;
