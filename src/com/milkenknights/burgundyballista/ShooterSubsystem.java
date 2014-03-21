@@ -34,6 +34,7 @@ public class ShooterSubsystem extends Subsystem {
 		tWinch = new Talon(config.getAsInt("tWinch"));
 		joystick = JStickMultiton.getJStick(2);
 		sWinch = new Solenoid(config.getAsInt("sWinch"));
+		limitswitch = new DigitalInput(config.getAsInt("lsShooter"));
 	}
 	
 	public int getState() {
