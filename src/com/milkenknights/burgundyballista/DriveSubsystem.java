@@ -99,37 +99,7 @@ public class DriveSubsystem extends Subsystem {
 		
 		SmartDashboard.putBoolean("Drive gear high:", driveGear.get());
 	}
-	
-	public void autonomousInit() {
-		gyro.reset();
-	}
-	
-	public void autonomousPeriodic(boolean rungyro) {
-		if (rungyro) {
-			runGyro = true;
-		}
-		else {
-			runPID = true;
-		}
 		
-		if (runGyro) {
-			drive.tankDrive(gyroPID.update(gyro.getAngle()), 
-					-gyroPID.update(gyro.getAngle()));
-			if (gyroPID.update(gyro.getAngle()) == 0) {
-				runGyro = false;
-			}
-		}
-		else if (runPID) {
-			drive.tankDrive(leftPID.update(leftDriveEncoder.getDistance()), 
-					rightPID.update(rightDriveEncoder.getDistance()));
-			if (leftPID.update(leftDriveEncoder.getDistance()) == 0 &&
-					rightPID.update(rightDriveEncoder.getDistance()) == 0) {
-				runPID = false;
-			}
-		}
-		
-	}
-	
 	public void setStraightPIDSetpoint(double setpoint) {
 		leftPID.changeSetpoint(setpoint);
 		rightPID.changeSetpoint(setpoint);
