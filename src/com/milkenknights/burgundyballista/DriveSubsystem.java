@@ -34,6 +34,7 @@ public class DriveSubsystem extends Subsystem {
 	
 	boolean normalDriveGear;
 	boolean slowMode;
+	boolean reverseMode;
 	boolean runPID;
 	boolean runGyro;
 	
@@ -79,12 +80,17 @@ public class DriveSubsystem extends Subsystem {
 	
 	public void teleopInit() {
 		setDriveMode(CHEESY);
+		reverseMode = false;
 	}
 	
 	public void teleopPeriodic() {
 		if (xbox.isReleased(JStick.XBOX_LB)) {
 			driveGear.toggle();
 			normalDriveGear = driveGear.get();
+		}
+		
+		if (xbox.isReleased(JStick.XBOX_X)) {
+			reverseMode =! reverseMode;
 		}
 		
 		if (xbox.isReleased(JStick.XBOX_Y)) {
@@ -155,6 +161,11 @@ public class DriveSubsystem extends Subsystem {
 			boolean trigDown
 					= Math.abs(xbox.getAxis(JStick.XBOX_TRIG)) > 0.5;
 
+			if (reverseMode) {
+				power = -power;
+				turn = -turn;
+			}
+			
 			if (slowMode) {
 				power = power * .5;
 			}
