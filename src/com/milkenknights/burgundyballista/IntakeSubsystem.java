@@ -12,7 +12,6 @@ public class IntakeSubsystem extends Subsystem {
 
 	FourBarSubsystem fourbar;
 	
-	int wheelsState = 0;
 	public static final int WHEELS_STOPPED = 0;
 	public static final int WHEELS_INTAKE = 1;
 	public static final int WHEELS_OUTTAKE = 2;
@@ -30,7 +29,6 @@ public class IntakeSubsystem extends Subsystem {
 	
 	public void teleopInit() {
 		setWheelsState(WHEELS_STOPPED);
-		setIntakePosition(INTAKE_DOWN);
 	}
 
 	public void teleopPeriodic() {
@@ -58,6 +56,7 @@ public class IntakeSubsystem extends Subsystem {
 	}
 	
 	public void setWheelsState(int s) {
+		SmartDashboard.putNumber("intake wheels state", s);
 		if (s == WHEELS_STOPPED) {
 			tIntake.set(0);
 		} else if (s == WHEELS_INTAKE) {

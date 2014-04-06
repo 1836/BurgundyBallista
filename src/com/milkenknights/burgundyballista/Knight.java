@@ -53,14 +53,15 @@ public class Knight extends IterativeRobot {
 		config = new ConfigFile("robot-config.txt");
 		config.loadFile();
 		
-		compressor = new Compressor(5, 2);
+		compressor = new Compressor(config.getAsInt("compressorPressureSwitch"),
+				config.getAsInt("compressorRelayChannel"));
 		driveSubsystem = new DriveSubsystem(config);
 		shooterSubsystem = new ShooterSubsystem(config);
 		fourBarSubsystem = new FourBarSubsystem(config);
 		intakeSubsystem = new IntakeSubsystem(config, fourBarSubsystem);
 		casterSubsystem = new CasterSubsystem(config);
 		
-		vision = new Vision();
+		//vision = new Vision();
 		
 		subsystems = new Vector(10);
 		
@@ -78,16 +79,21 @@ public class Knight extends IterativeRobot {
     }
 
 	boolean alreadyShot;
+	double moveForwardTime;
 	
     /**
      * This function is called periodically during autonomous
      */
 	public void autonomousInit() {
+		/*
 		startSideLeft
 				= SmartDashboard.getBoolean("Starting on left side?", false);
+		
+		moveForwardTime = SmartDashboard.getNumber("moveForwardTime", 1);
 
 		startTime = Timer.getFPGATimestamp();
-		
+		*/
+		/*
 		int hotSide = vision.isHot();
 		System.out.println("HOTSIDE RETURNED "+hotSide);
 
@@ -101,8 +107,9 @@ public class Knight extends IterativeRobot {
 			// seconds before starting the autonomous procedure
 			startTime += 5;
 		}
-		
-		autonMode = (int) SmartDashboard.getNumber("autonMode",1);
+		*/
+		/*
+		autonMode = (int) SmartDashboard.getNumber("autonMode",4);
 		
 		if (autonMode == 1) {
 			// Auton mode 1: simply move 10 feet forward
@@ -116,14 +123,21 @@ public class Knight extends IterativeRobot {
 			fourBarSubsystem.setPosition(FourBarSubsystem.SHOOT);
 			shooterSubsystem.pullBack();
 		} else if (autonMode == 3) {
+			// one ball auton high without encoders
 			shooterSubsystem.pullBack();
 		} else if (autonMode == 4) {
 			// Auton mode 4: One ball auton without encoders
 			driveSubsystem.setDriveMode(DriveSubsystem.FULLSPEED);
+		} else if (autonMode ==5) {
+			// just go forward for 2 seconds
+			driveSubsystem.setDriveMode(DriveSubsystem.FULLSPEED);
 		}
+		*/
+		
 	}
 	
 	public void autonomousPeriodic() {
+		/*
 		double currentTime = Timer.getFPGATimestamp() - startTime;
 
 		
@@ -160,33 +174,37 @@ public class Knight extends IterativeRobot {
 			}
 			
 		} else if (autonMode == 3) {
-			// one ball auton high
-			if (currentTime > 0) {
+			// one ball auton high without encoders
+			if (currentTime > moveForwardTime) {
+				driveSubsystem.setDriveMode(DriveSubsystem.NONE);
 				if (shooterSubsystem.getState() ==
 						ShooterSubsystem.WINCH_PULLED) {
 					shooterSubsystem.shoot();
 				} else if (shooterSubsystem.getState() ==
 						ShooterSubsystem.WINCH_INITIAL) {
-					// this means the shooter has finished shooting, so we
-					// should start moving forward
-					driveSubsystem.setStraightPIDSetpoint(10 * 12);
-					driveSubsystem.setDriveMode(DriveSubsystem.PIDSTRAIGHT);
 				}
+			} else if (currentTime > 0) {
+				driveSubsystem.setDriveMode(DriveSubsystem.FULLSPEED);
 			}
 			
 		} else if (autonMode == 4) {
 			// one ball auton low without encoders
-			if (currentTime > 6) {
+			if (currentTime > 3) {
 				intakeSubsystem.setWheelsState(IntakeSubsystem.WHEELS_STOPPED);
-			} else if (currentTime > 3) {
+			} else if (currentTime > 1) {
 				driveSubsystem.setDriveMode(DriveSubsystem.NONE);
-				intakeSubsystem.setIntakePosition(IntakeSubsystem.INTAKE_DOWN);
 				intakeSubsystem.setWheelsState(IntakeSubsystem.WHEELS_OUTTAKE);
+				intakeSubsystem.setIntakePosition(IntakeSubsystem.INTAKE_DOWN);
+			}
+		} else if (autonMode == 5) {
+			if (currentTime > 2) {
+				driveSubsystem.setDriveMode(DriveSubsystem.NONE);
 			}
 		}
 		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
 			((Subsystem) e.nextElement()).update();
 		}
+		*/
     }
 
 	public void teleopInit() {
@@ -201,9 +219,23 @@ public class Knight extends IterativeRobot {
     public void teleopPeriodic() {
 		JStickMultiton.updateAll();
 
+		int i = 1;
 		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
-			((Subsystem) e.nextElement()).teleopPeriodic();
-			((Subsystem) e.nextElement()).update();
+			Subsystem s = (Subsystem) e.nextElement();
+			//System.out.println("Subsystem "+i+" running");
+			double fullTime = 0;
+			double startTime = Timer.getFPGATimestamp();
+			
+			s.teleopPeriodic();
+			
+			//System.out.println("teleop: "+(Timer.getFPGATimestamp() - startTime));
+			fullTime = Timer.getFPGATimestamp() - startTime;
+			
+			s.update();
+			
+			//System.out.println("update: "+(Timer.getFPGATimestamp() - (startTime + fullTime)));
+			fullTime += Timer.getFPGATimestamp() - (startTime + fullTime);
+			//System.out.println("total "+i+": "+fullTime);
 		}
 		
                 
@@ -215,7 +247,7 @@ public class Knight extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    
+		shooterSubsystem.test();
     }
     
 }

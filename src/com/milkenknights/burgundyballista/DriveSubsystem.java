@@ -66,12 +66,14 @@ public class DriveSubsystem extends Subsystem {
 				config.getAsDouble("gyroki"),
 				config.getAsDouble("gyrokd"), .001);
 		
+		/*
 		leftDriveEncoder = new Encoder(config.getAsInt("leftEncA"),
 				config.getAsInt("leftEncB"),
 				true, CounterBase.EncodingType.k4X);
 		rightDriveEncoder = new Encoder(config.getAsInt("rightEncA"),
 				config.getAsInt("rightEncB"),
 				true, CounterBase.EncodingType.k4X);
+		*/
 		
 		gyro = new Gyro(config.getAsInt("gyro"));
 		
@@ -125,6 +127,7 @@ public class DriveSubsystem extends Subsystem {
 	 * This method should be called during every loop no matter what.
 	 */
 	public void update() {
+		SmartDashboard.putNumber("drivemode", driveMode);
 		if (driveMode == CHEESY) {
 			double power = xbox.getAxis(JStick.XBOX_LSY);
 			double turn = xbox.getAxis(JStick.XBOX_RSX);
@@ -139,6 +142,10 @@ public class DriveSubsystem extends Subsystem {
 			if (slowMode) {
 				power = power * .5;
 			}
+			
+			SmartDashboard.putNumber("power", power);
+			SmartDashboard.putNumber("turn", turn);
+			SmartDashboard.putBoolean("td",trigDown);
 
 			drive.cheesyDrive(power, -turn, trigDown);
 			
@@ -163,5 +170,8 @@ public class DriveSubsystem extends Subsystem {
 		} else {
 			drive.tankDrive(0,0);
 		}
+		
+		SmartDashboard.putNumber("left", drive.getLeft());
+		SmartDashboard.putNumber("right", drive.getRight());
 	}	
 }

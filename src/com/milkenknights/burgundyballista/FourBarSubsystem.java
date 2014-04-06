@@ -34,9 +34,13 @@ public class FourBarSubsystem extends Subsystem {
 
 	public FourBarSubsystem(RobotConfig config) {
 		tFourBar = new Talon(config.getAsInt("tFourBar"));
+		
+		positionDistance = config.getAsDouble("fourBarDistanceA");
+				
 		encoder = new Encoder(config.getAsInt("fourBarEncA"),
 			config.getAsInt("fourBarEncB"));
-		fourBarPIDUp = new PIDSystem(config.getAsDouble("fourBarDistance"),
+		
+		fourBarPIDUp = new PIDSystem(positionDistance,
 			config.getAsDouble("fourBarPIDkpUp"),
 			config.getAsDouble("fourBarPIDkiUp"),
 			config.getAsDouble("fourBarPIDkdUp"), 0);
@@ -48,7 +52,6 @@ public class FourBarSubsystem extends Subsystem {
 
 		joystick = JStickMultiton.getJStick(2);
 
-		positionDistance = config.getAsDouble("fourBarDistance");
 
 		outtakePosition = config.getAsDouble("fourBarDistanceDown");
 		goingUp = false;
@@ -103,6 +106,11 @@ public class FourBarSubsystem extends Subsystem {
 			tFourBar.set(out);
 		}
 		
+		SmartDashboard.putNumber("fourbar encoder", encoder.getDistance());
+	}
+	
+	public void test() {
+		tFourBar.set(joystick.getAxis(2));
 		SmartDashboard.putNumber("fourbar encoder", encoder.getDistance());
 	}
 }

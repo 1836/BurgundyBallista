@@ -13,7 +13,7 @@ public class RobotConfig {
 		defaultConfig.put("compressorRelayChannel","2");
 		defaultConfig.put("sDriveGearHigh","2");
 		defaultConfig.put("sDriveGearLow","1");
-		defaultConfig.put("sCaster","5");
+		defaultConfig.put("sCaster","9");
 		defaultConfig.put("leftEncA","11");
 		defaultConfig.put("leftEncB","12");
 		defaultConfig.put("rightEncA","13");
@@ -29,7 +29,8 @@ public class RobotConfig {
 		defaultConfig.put("tIntake","6");
 		defaultConfig.put("tFourBar","5");
 		defaultConfig.put("sGrabber","3");
-		defaultConfig.put("sWinch","4");
+		defaultConfig.put("sWinchA","4");
+		defaultConfig.put("sWinchB","5");
 		defaultConfig.put("sIntakeA","3");
 		//defaultConfig.put("sIntakeB","7");
 		defaultConfig.put("winchPullBack", "1");
@@ -45,7 +46,8 @@ public class RobotConfig {
 		defaultConfig.put("gyroki", "0.01");
 		defaultConfig.put("gyrokd", "0.001");
 		defaultConfig.put("gyro", "1");
-		defaultConfig.put("fourBarDistance", "200");
+		defaultConfig.put("fourBarDistanceA", "90");
+		defaultConfig.put("fourBarDistanceB", "200");
 		defaultConfig.put("fourBarPIDkpUp", "0.0125");
 		defaultConfig.put("fourBarPIDkiUp", "0.0");
 		defaultConfig.put("fourBarPIDkdUp", "0.002");
@@ -53,7 +55,7 @@ public class RobotConfig {
 		defaultConfig.put("fourBarPIDkiDown", "0.0");
 		defaultConfig.put("fourBarPIDkdDown", "0.0001");
 		defaultConfig.put("fourBarDistanceDown", "30");
-		defaultConfig.put("lsShooter", "14");
+		defaultConfig.put("lsShooter", "2");
 	}
 
 	final public String get(Object k) {
