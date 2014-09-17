@@ -19,7 +19,7 @@ public class FourBarSubsystem extends Subsystem {
 	PIDSystem fourBarPIDUp;
 	PIDSystem fourBarPIDDown;
 	Encoder encoder;
-	JStick joystick;
+	JStick atka;
 
 	double outtakePosition;
 
@@ -50,7 +50,7 @@ public class FourBarSubsystem extends Subsystem {
 			config.getAsDouble("fourBarPIDkiDown"),
 			config.getAsDouble("fourBarPIDkdDown"), 0);
 
-		joystick = JStickMultiton.getJStick(2);
+		atka = JStickMultiton.getJStick(3);
 
 
 		outtakePosition = config.getAsDouble("fourBarDistanceDown");
@@ -67,7 +67,7 @@ public class FourBarSubsystem extends Subsystem {
 	}
 
 	public void teleopPeriodic() {
-		if (joystick.isPressed(2)) {
+		if (atka.isPressed(2)) {
 			if (position == SHOOT) {
 				setPosition(LOAD);
 			} else {
@@ -110,7 +110,7 @@ public class FourBarSubsystem extends Subsystem {
 	}
 	
 	public void test() {
-		tFourBar.set(joystick.getAxis(2));
+		tFourBar.set(atka.getAxis(2));
 		SmartDashboard.putNumber("fourbar encoder", encoder.getDistance());
 	}
 }

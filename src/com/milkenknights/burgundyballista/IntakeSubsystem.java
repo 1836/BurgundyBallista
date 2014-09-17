@@ -8,7 +8,7 @@ public class IntakeSubsystem extends Subsystem {
 
 	Talon tIntake;
 	Solenoid sIntake;
-	JStick joystick;
+	JStick atka;
 
 	FourBarSubsystem fourbar;
 	
@@ -23,7 +23,7 @@ public class IntakeSubsystem extends Subsystem {
 	public IntakeSubsystem(RobotConfig config, FourBarSubsystem fourbar) {
 		tIntake = new Talon(config.getAsInt("tIntake"));
 		sIntake = new Solenoid(config.getAsInt("sIntakeA"));
-		joystick = JStickMultiton.getJStick(2);
+		atka = JStickMultiton.getJStick(2);
 		this.fourbar = fourbar;
 	}
 	
@@ -32,22 +32,22 @@ public class IntakeSubsystem extends Subsystem {
 	}
 
 	public void teleopPeriodic() {
-		if (joystick.isPressed(5)) {
+		if (atka.isPressed(5)) {
 			// Outtake
 			setWheelsState(WHEELS_OUTTAKE);
 			fourbar.setPosition(FourBarSubsystem.OUTTAKE);
 		}
 
-		if (joystick.isPressed(4)) {
+		if (atka.isPressed(4)) {
 			setWheelsState(WHEELS_INTAKE);
 		}
 
-		if (joystick.isReleased(4) || joystick.isReleased(5)) {
+		if (atka.isReleased(4) || atka.isReleased(5)) {
 			setWheelsState(WHEELS_STOPPED);
 			fourbar.setPosition(FourBarSubsystem.LOAD);
 		}
 
-		if (joystick.isPressed(3)) {
+		if (atka.isPressed(3)) {
 			toggleIntakePosition();
 		}
 

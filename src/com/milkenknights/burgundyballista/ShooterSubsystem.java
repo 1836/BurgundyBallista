@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterSubsystem extends Subsystem {
 	Talon tWinch;
-	JStick joystick;
+	JStick atka;
 	DoubleSolenoid sWinch;
 	//PIDSystem PID;
 	
@@ -35,7 +35,7 @@ public class ShooterSubsystem extends Subsystem {
 
 	public ShooterSubsystem(RobotConfig config) {
 		tWinch = new Talon(config.getAsInt("tWinch"));
-		joystick = JStickMultiton.getJStick(2);
+		atka = JStickMultiton.getJStick(3);
 		sWinch = new DoubleSolenoid(config.getAsInt("sWinchA"), config.getAsInt("sWinchB"));
 		limitswitch = new DigitalInput(config.getAsInt("lsShooter"));
 	}
@@ -49,11 +49,11 @@ public class ShooterSubsystem extends Subsystem {
 		if (getState() == WINCH_INITIAL) {
 			pullBack();
 		}
-		if (joystick.isPressed(1) && state == WINCH_PULLED) {
+		if (atka.isPressed(1) && state == WINCH_PULLED) {
 			shoot();
 		}
 		
-		if (joystick.isReleased(11)) {
+		if (atka.isReleased(11)) {
 			pullBack();
 		}
 	}
@@ -73,7 +73,7 @@ public class ShooterSubsystem extends Subsystem {
 					+ "winch has been pulled back.");
 		}
 		
-		if (joystick.isReleased(8)) {
+		if (atka.isReleased(8)) {
 			stopWinch();
 		}
 		
