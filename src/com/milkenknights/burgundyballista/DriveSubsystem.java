@@ -19,7 +19,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Jake
  */
 public class DriveSubsystem extends Subsystem {
-	JStick xbox;
+	//JStick xbox;
+	JStick atkl;
+	JStick atkr;
+	
 	Drive drive;
 	SolenoidPair driveGear;
 	
@@ -38,6 +41,9 @@ public class DriveSubsystem extends Subsystem {
 	boolean runPID;
 	boolean runGyro;
 	
+	double tankLeftSpeed;
+	double tankRightSpeed;
+	
 	int driveMode = 0;
 	public static final int NONE = 0;
 	public static final int CHEESY = 1;
@@ -46,7 +52,10 @@ public class DriveSubsystem extends Subsystem {
 	public static final int FULLSPEED = 4;
 	
 	public DriveSubsystem(RobotConfig config) {
-		xbox = JStickMultiton.getJStick(1);
+		//xbox = JStickMultiton.getJStick(1);
+		atkl = JStickMultiton.getJStick(1);
+		atkr = JStickMultiton.getJStick(2);
+
 		drive = new Drive(new Talon(10),
 				new Talon(9));
 		// this solenoid pair is TRUE if the robot is in high gear
@@ -81,16 +90,18 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	public void teleopInit() {
-		setDriveMode(CHEESY);
+		setDriveMode(TANK);
 		reverseMode = false;
 	}
 	
 	public void teleopPeriodic() {
-		if (xbox.isReleased(JStick.XBOX_LB)) {
+		//if (xbox.isReleased(JStick.XBOX_LB)) {
+		if (atkr.isReleased(1)) {
 			driveGear.toggle();
 			normalDriveGear = driveGear.get();
 		}
 		
+		/*
 		if (xbox.isReleased(JStick.XBOX_Y)) {
 			slowMode =! slowMode;
 			
@@ -104,8 +115,30 @@ public class DriveSubsystem extends Subsystem {
 		if (xbox.isReleased(JStick.XBOX_X)) {
 			reverseMode = !reverseMode;
 		}
+		*/
+		
+		setTankSpeed(-atkl.getAxis(2), -atkr.getAxis(2));
+		
+		if (atkl.getAxis(2) != atkl.getSlowedAxis(2)) {
+			SmartDashboard.putNumber("L slowed", 0);
+		} else {
+			SmartDashboard.putNumber("L slowed", 1);
+		}
 		
 		SmartDashboard.putBoolean("Drive gear high:", driveGear.get());
+	}
+	
+	public void setLeftSpeed(double speed) {
+		tankLeftSpeed = speed;
+	}
+
+	public void setRightSpeed(double speed) {
+		tankRightSpeed = speed;
+	}
+
+	public void setTankSpeed(double left, double right) {
+		tankLeftSpeed = left;
+		tankRightSpeed = right;
 	}
 		
 	public void setStraightPIDSetpoint(double setpoint) {
@@ -129,6 +162,7 @@ public class DriveSubsystem extends Subsystem {
 	public void update() {
 		SmartDashboard.putNumber("drivemode", driveMode);
 		if (driveMode == CHEESY) {
+			/*
 			double power = xbox.getAxis(JStick.XBOX_LSY);
 			double turn = xbox.getAxis(JStick.XBOX_RSX);
 			boolean trigDown
@@ -148,18 +182,9 @@ public class DriveSubsystem extends Subsystem {
 			SmartDashboard.putBoolean("td",trigDown);
 
 			drive.cheesyDrive(power, -turn, trigDown);
-			
+			*/
 		} else if (driveMode == TANK) {
-			double left = xbox.getAxis(JStick.XBOX_LSY);
-			double right = xbox.getAxis(JStick.XBOX_RSY);
-			
-			if (slowMode) {
-				left = left * .5;
-				right = right * .5;
-			}
-			
-			drive.tankDrive(left, right);
-			
+			drive.tankDrive(tankLeftSpeed, tankRightSpeed);
 		} else if (driveMode == PIDSTRAIGHT) {
 			drive.tankDrive(leftPID.update(leftDriveEncoder.getDistance()),
 					rightPID.update(rightDriveEncoder.getDistance()));
