@@ -101,7 +101,7 @@ public class ShooterSubsystem extends Subsystem {
 		} else if (state == WINCH_STOPPED) {
 			tWinch.set(0);
 		}
-		System.out.println("limit switch "+(limitswitch.get() ? "on" : "off"));
+		//System.out.println("limit switch "+(limitswitch.get() ? "on" : "off"));
 	}
 	
 	public void test() {

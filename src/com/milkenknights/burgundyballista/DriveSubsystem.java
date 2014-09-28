@@ -44,12 +44,15 @@ public class DriveSubsystem extends Subsystem {
 	double tankLeftSpeed;
 	double tankRightSpeed;
 	
+	ByteServer byteServer;
+	
 	int driveMode = 0;
 	public static final int NONE = 0;
 	public static final int CHEESY = 1;
 	public static final int TANK = 2;
 	public static final int PIDSTRAIGHT = 3;
 	public static final int FULLSPEED = 4;
+	public static final int REESHVISION = 5;
 	
 	public DriveSubsystem(RobotConfig config) {
 		//xbox = JStickMultiton.getJStick(1);
@@ -87,6 +90,9 @@ public class DriveSubsystem extends Subsystem {
 		gyro = new Gyro(config.getAsInt("gyro"));
 		
 		gyro.reset();
+		
+		// reeshvision
+		byteServer = new ByteServer(1180);
 	}
 	
 	public void teleopInit() {
@@ -191,7 +197,24 @@ public class DriveSubsystem extends Subsystem {
 			
 		} else if (driveMode == FULLSPEED) {
 			drive.tankDrive(1,1);
+		} else if (driveMode == REESHVISION) {
+			int b = byteServer.getCurrentByte();
+			int lbyte = b >> 4;
+			int rbyte = b & 15;
+			double reesh_l, reesh_r;
+			if (lbyte > 7) {
+				reesh_l = ((double)(8 - lbyte)) / 7.0;
+			} else {
+				reesh_l = ((double)lbyte)/7.0;
+			}
 			
+			if (rbyte > 7) {
+				reesh_r = ((double)(8 - rbyte)) / 7.0;
+			} else {
+				reesh_r = ((double)rbyte)/7.0;
+			}
+			System.out.println(""+reesh_l+", "+reesh_r+", "+lbyte+", "+rbyte);
+			drive.tankDrive(reesh_l, reesh_r);
 		} else {
 			drive.tankDrive(0,0);
 		}

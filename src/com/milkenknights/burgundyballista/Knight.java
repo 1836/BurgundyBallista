@@ -134,6 +134,7 @@ public class Knight extends IterativeRobot {
 		}
 		*/
 		
+		driveSubsystem.setDriveMode(DriveSubsystem.REESHVISION);
 	}
 	
 	public void autonomousPeriodic() {
@@ -201,10 +202,11 @@ public class Knight extends IterativeRobot {
 				driveSubsystem.setDriveMode(DriveSubsystem.NONE);
 			}
 		}
+		*/
+		
 		for (Enumeration e = subsystems.elements(); e.hasMoreElements();) {
 			((Subsystem) e.nextElement()).update();
 		}
-		*/
     }
 
 	public void teleopInit() {
