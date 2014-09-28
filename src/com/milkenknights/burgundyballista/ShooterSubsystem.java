@@ -92,7 +92,7 @@ public class ShooterSubsystem extends Subsystem {
 				state = WINCH_PULLED;
 				tWinch.set(0);
 			} else {
-				//tWinch.set(1);
+				tWinch.set(1);
 			}
 		} else if (state == WINCH_SHOOTING &&
 				(Timer.getFPGATimestamp() - lastShootTime) > SHOOT_DELAY) {

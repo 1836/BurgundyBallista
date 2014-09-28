@@ -67,7 +67,7 @@ public class Knight extends IterativeRobot {
 		
 		subsystems.addElement(driveSubsystem);
 		subsystems.addElement(casterSubsystem);
-		subsystems.addElement(shooterSubsystem);
+		//subsystems.addElement(shooterSubsystem);
 		subsystems.addElement(intakeSubsystem);
 		subsystems.addElement(fourBarSubsystem);
 		
