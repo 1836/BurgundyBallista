@@ -23,7 +23,7 @@ public class IntakeSubsystem extends Subsystem {
 	public IntakeSubsystem(RobotConfig config, FourBarSubsystem fourbar) {
 		tIntake = new Talon(config.getAsInt("tIntake"));
 		sIntake = new Solenoid(config.getAsInt("sIntakeA"));
-		atka = JStickMultiton.getJStick(2);
+		atka = JStickMultiton.getJStick(3);
 		this.fourbar = fourbar;
 	}
 	
