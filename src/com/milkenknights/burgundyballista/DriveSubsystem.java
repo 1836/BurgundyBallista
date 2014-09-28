@@ -123,7 +123,8 @@ public class DriveSubsystem extends Subsystem {
 		}
 		*/
 		
-		setTankSpeed(-atkl.getAxis(2), -atkr.getAxis(2));
+		// REVERSED?? CHANGE IT HERE BY PLACING NEGATIVES
+		setTankSpeed(atkl.getAxis(2), atkr.getAxis(2));
 		
 		if (atkl.getAxis(2) != atkl.getSlowedAxis(2)) {
 			SmartDashboard.putNumber("L slowed", 0);
