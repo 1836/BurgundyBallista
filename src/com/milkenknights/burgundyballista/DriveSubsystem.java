@@ -215,7 +215,7 @@ public class DriveSubsystem extends Subsystem {
 				reesh_r = ((double)rbyte)/7.0;
 			}
 			System.out.println(""+reesh_l+", "+reesh_r+", "+lbyte+", "+rbyte);
-			drive.tankDrive(reesh_l, reesh_r);
+			drive.tankDrive(reesh_l, reesh_l);
 		} else {
 			drive.tankDrive(0,0);
 		}
