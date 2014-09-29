@@ -46,7 +46,7 @@ public class RobotConfig {
 		defaultConfig.put("gyroki", "0.01");
 		defaultConfig.put("gyrokd", "0.001");
 		defaultConfig.put("gyro", "1");
-		defaultConfig.put("fourBarDistanceA", "90");
+		defaultConfig.put("fourBarDistanceA", "130");
 		defaultConfig.put("fourBarDistanceB", "200");
 		defaultConfig.put("fourBarPIDkpUp", "0.0125");
 		defaultConfig.put("fourBarPIDkiUp", "0.0");
