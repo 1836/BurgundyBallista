@@ -21,6 +21,18 @@ public class CasterSubsystem extends Subsystem {
 		caster = new Solenoid(config.getAsInt("sCaster"));
 	}
 	
+	public void toggleCaster() {
+		setCaster(!getCasterState());
+	}
+	
+	public void setCaster(boolean c) {
+		caster.set(c);
+	}
+	
+	public boolean getCasterState() {
+		return caster.get();
+	}
+	
 	public void teleopPeriodic() {
 		if (xbox.isReleased(JStick.XBOX_RB)) {
 			caster.set(!caster.get());

@@ -13,9 +13,10 @@ public abstract class ControlSystem {
 	protected CasterSubsystem casterSub;
 	protected DriveSubsystem driveSub;
 	protected FourBarSubsystem fourBarSub;
+	protected IntakeSubsystem intakeSub;
 	protected ShooterSubsystem shooterSub;
 	
-	public ControlSystem(CasterSubsystem sCaster,
+	protected ControlSystem(CasterSubsystem sCaster,
 			             DriveSubsystem sDrive,
 						 FourBarSubsystem sFourBar,
 						 IntakeSubsystem sIntake,
@@ -23,6 +24,7 @@ public abstract class ControlSystem {
 		casterSub = sCaster;
 		driveSub = sDrive;
 		fourBarSub = sFourBar;
+		intakeSub = sIntake;
 		shooterSub = sShooter;
 	}
 	public abstract void teleopPeriodic();

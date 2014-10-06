@@ -161,6 +161,18 @@ public class DriveSubsystem extends Subsystem {
 		return leftPID.onTarget(threshold) && rightPID.onTarget(threshold);
 	}
 	
+	public void toggleGear() {
+		driveGear.toggle();
+	}
+	
+	public void setGear(boolean g) {
+		driveGear.set(true);
+	}
+	
+	public boolean getGearState() {
+		return driveGear.get();
+	}
+	
 	/**
 	 * Updates wheels depending on driveMode (which should be set to the
 	 * desired mode with setDriveMode().

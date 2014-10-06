@@ -76,6 +76,10 @@ public class FourBarSubsystem extends Subsystem {
 		}
 		//System.out.println("" + encoder.getDistance());
 	}
+	
+	public int getPosition() {
+		return position;
+	}
 
 	public void setPosition(int pos) {
 		if (pos == LOAD) {
