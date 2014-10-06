@@ -19,6 +19,9 @@ public class TripleATKControl extends ControlSystem {
 	}
 	
 	public void teleopPeriodic() {
+		atkl.update();
+		atkr.update();
+		atka.update();
 		// GEAR TOGGLE
 		// controlled by right ATK trigger
 		if (atkr.isReleased(1)) {

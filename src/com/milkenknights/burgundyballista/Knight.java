@@ -35,6 +35,8 @@ public class Knight extends IterativeRobot {
 	IntakeSubsystem intakeSubsystem;
 	FourBarSubsystem fourBarSubsystem;
 	
+	ControlSystem controlSystem;
+	
 	Vision vision;
 	
 	boolean startSideLeft = true;
@@ -60,6 +62,12 @@ public class Knight extends IterativeRobot {
 		fourBarSubsystem = new FourBarSubsystem(config);
 		intakeSubsystem = new IntakeSubsystem(config, fourBarSubsystem);
 		casterSubsystem = new CasterSubsystem(config);
+		
+		controlSystem = new TripleATKControl(casterSubsystem,
+				driveSubsystem,
+				fourBarSubsystem,
+				intakeSubsystem,
+				shooterSubsystem);
 		
 		//vision = new Vision();
 		
@@ -219,6 +227,7 @@ public class Knight extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+		/*
 		JStickMultiton.updateAll();
 
 		int i = 1;
@@ -239,7 +248,8 @@ public class Knight extends IterativeRobot {
 			fullTime += Timer.getFPGATimestamp() - (startTime + fullTime);
 			//System.out.println("total "+i+": "+fullTime);
 		}
-		
+		*/
+		controlSystem.teleopPeriodic();
                 
         // Feed the Watchdog. Makes the motors not fail every 100ms
         Watchdog.getInstance().feed();
