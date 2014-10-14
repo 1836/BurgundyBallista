@@ -24,6 +24,12 @@ public class ShooterSubsystem extends Subsystem {
 	public static final int WINCH_SHOOTING = 3;
 	public static final int WINCH_STOPPED = 4;
 	
+	int sWinchState = 0;
+	public static final int SOLENOID_NONE = 0;
+	public static final int SOLENOID_FORWARD = 1;
+	public static final int SOLENOID_REVERSE = 2;
+	
+	
 	// when we shoot, we should wait a certain duration before being certain
 	// that we have gone back into the initial state.
 	double lastShootTime;
@@ -72,13 +78,9 @@ public class ShooterSubsystem extends Subsystem {
 			System.out.println("Warning! The robot is shooting before the"
 					+ "winch has been pulled back.");
 		}
-		
-		if (atka.isReleased(8)) {
-			stopWinch();
-		}
-		
+				
 		state = WINCH_SHOOTING;
-		sWinch.set(DoubleSolenoid.Value.kForward);
+		sWinchState = SOLENOID_FORWARD;
 		lastShootTime = Timer.getFPGATimestamp();
 	}
 	
@@ -97,9 +99,18 @@ public class ShooterSubsystem extends Subsystem {
 		} else if (state == WINCH_SHOOTING &&
 				(Timer.getFPGATimestamp() - lastShootTime) > SHOOT_DELAY) {
 			state = WINCH_INITIAL;
-			sWinch.set(DoubleSolenoid.Value.kReverse);
+			sWinchState = SOLENOID_REVERSE;
 		} else if (state == WINCH_STOPPED) {
 			tWinch.set(0);
+		}
+		
+		if (sWinchState == SOLENOID_FORWARD) {
+			sWinch.set(DoubleSolenoid.Value.kForward);
+			sWinchState = SOLENOID_NONE;
+		}
+		else if (sWinchState == SOLENOID_REVERSE) {
+			sWinch.set(DoubleSolenoid.Value.kReverse);
+			sWinchState = SOLENOID_NONE;
 		}
 		//System.out.println("limit switch "+(limitswitch.get() ? "on" : "off"));
 	}
