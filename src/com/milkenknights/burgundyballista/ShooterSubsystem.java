@@ -24,10 +24,9 @@ public class ShooterSubsystem extends Subsystem {
 	public static final int WINCH_SHOOTING = 3;
 	public static final int WINCH_STOPPED = 4;
 	
-	int sWinchState = 0;
-	public static final int SOLENOID_NONE = 0;
-	public static final int SOLENOID_FORWARD = 1;
-	public static final int SOLENOID_REVERSE = 2;
+	boolean sWinchState = false;
+	public static final boolean SOLENOID_FORWARD = true;
+	public static final boolean SOLENOID_REVERSE = false;
 	
 	
 	// when we shoot, we should wait a certain duration before being certain
@@ -106,11 +105,9 @@ public class ShooterSubsystem extends Subsystem {
 		
 		if (sWinchState == SOLENOID_FORWARD) {
 			sWinch.set(DoubleSolenoid.Value.kForward);
-			sWinchState = SOLENOID_NONE;
 		}
 		else if (sWinchState == SOLENOID_REVERSE) {
 			sWinch.set(DoubleSolenoid.Value.kReverse);
-			sWinchState = SOLENOID_NONE;
 		}
 		//System.out.println("limit switch "+(limitswitch.get() ? "on" : "off"));
 	}

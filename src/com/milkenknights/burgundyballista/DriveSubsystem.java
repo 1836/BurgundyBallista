@@ -41,6 +41,10 @@ public class DriveSubsystem extends Subsystem {
 	boolean runPID;
 	boolean runGyro;
 	
+	boolean driveGearState = true;
+	public static final boolean DRIVE_GEAR_HIGH = true;
+	public static final boolean DRIVE_GEAR_LOW = false;
+	
 	double tankLeftSpeed;
 	double tankRightSpeed;
 	
@@ -98,13 +102,14 @@ public class DriveSubsystem extends Subsystem {
 	public void teleopInit() {
 		setDriveMode(TANK);
 		reverseMode = false;
+		driveGearState = driveGear.get();
 	}
 	
 	public void teleopPeriodic() {
 		//if (xbox.isReleased(JStick.XBOX_LB)) {
 		if (atkr.isReleased(1)) {
-			driveGear.toggle();
-			normalDriveGear = driveGear.get();
+			driveGearState =! driveGearState;
+			normalDriveGear = driveGearState;
 		}
 		
 		/*
@@ -132,7 +137,7 @@ public class DriveSubsystem extends Subsystem {
 			SmartDashboard.putNumber("L slowed", 1);
 		}
 		
-		SmartDashboard.putBoolean("Drive gear high:", driveGear.get());
+		SmartDashboard.putBoolean("Drive gear high:", driveGearState);
 	}
 	
 	public void setLeftSpeed(double speed) {
@@ -162,15 +167,15 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	public void toggleGear() {
-		driveGear.toggle();
+		driveGearState =! driveGearState;
 	}
 	
 	public void setGear(boolean g) {
-		driveGear.set(true);
+		driveGearState = true;
 	}
 	
 	public boolean getGearState() {
-		return driveGear.get();
+		return driveGearState;
 	}
 	
 	/**
@@ -179,6 +184,16 @@ public class DriveSubsystem extends Subsystem {
 	 * This method should be called during every loop no matter what.
 	 */
 	public void update() {
+		//if driveGearState = true then drive gear is high
+		if (driveGearState) {
+			driveGear.set(true);
+		}
+		else {
+			driveGear.set(false);
+		}
+		
+		
+		
 		SmartDashboard.putNumber("drivemode", driveMode);
 		if (driveMode == CHEESY) {
 			/*
